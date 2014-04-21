@@ -1,0 +1,19 @@
+{
+    "apiVersion": "1.0.5",
+    "swaggerBasePath": "http://localhost:8080",
+    "messages": {
+        "hello": "Prototype for project External RFP"
+    },
+    "databaseConfig": {
+    "driverClass": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+    "user": "cvent",
+    "password": "n0rth",
+    "url": "jdbc:sqlserver://hq04d2dba201\\dev_silo;database=CVENT_PROD",
+    "validationQuery": "SELECT 1",
+    "minSize": 5,
+    "maxSize": 50,
+    "maxWaitForConnection": "30s",
+    "checkConnectionWhileIdle": true,
+    "checkConnectionHealthWhenIdleFor": "10s"
+    }
+}

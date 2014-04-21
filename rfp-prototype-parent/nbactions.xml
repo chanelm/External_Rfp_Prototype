@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-Build with Dependencies -U</actionName>
+        <displayName>Build with Dependencies -U</displayName>
+        <goals>
+            <goal>install</goal>
+            <goal>-U</goal>
+        </goals>
+    </action>
+</actions>

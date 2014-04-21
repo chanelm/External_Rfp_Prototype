@@ -1,0 +1,5 @@
+com\cvent\rfp\service\RfpService.class
+com\cvent\rfp\resources\RfpResource.class
+com\cvent\rfp\health\RfpHealthCheck.class
+com\cvent\rfp\service\RfpServiceConfiguration.class
+com\cvent\rfp\resources\HelloWorldResource.class

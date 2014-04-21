@@ -1,0 +1,24 @@
+<FindBugsFilter>
+
+    <!-- Match all REC violations. -->
+    <Match>
+        <Bug code="REC" />
+    </Match>
+    <!-- Match all EI violations. -->
+    <Match>
+        <Bug code="EI" />
+    </Match>
+    <!-- Match all EI2 violations. -->
+    <Match>
+        <Bug code="EI2" />
+    </Match>
+
+    <!-- All bugs in test classes, except for JUnit-specific bugs -->
+    <Match>
+        <Class name="~.*\.*Test" />
+        <Not>
+            <Bug code="IJU" />
+        </Not>
+    </Match>
+
+</FindBugsFilter>

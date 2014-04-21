@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fx="http://www.example.org/test" targetNamespace="http://www.example.org/test" elementFormDefault="qualified">                                                                                                  
+    <complexType name="Rfp">                                                                         
+      <sequence>                                                                         
+        <element name="accountId" type="long" minOccurs="1" />
+        <element name="rfpStub" type="string" minOccurs="1" /> 
+        <element name="rfpName" type="string" minOccurs="1" /> 
+      </sequence>                                                                        
+    </complexType>
+    
+<!--    <complexType name="SleepRoom">
+        <sequence>
+            <element name="rfpStub" type="string" />
+            <element name="rfpName" type="string" />
+            <element name="dayNumber" type="int" minOccurs="1" />
+            <element name="roomBlocks" type="fx:RoomBlock" minOccurs="0" maxOccurs = "unbounded"/>
+        </sequence>
+    </complexType>
+    
+    <complexType name="RoomBlock">
+        <sequence>
+            <element name="roomType" type="string" />
+            <element name="quantity" type="int" />
+        </sequence>
+    </complexType>-->
+    
+    
+<!--    <complexType name="Agenda">
+        <sequence>
+            <element name="rfpStub" type="string" />
+            <element name="rfpName" type="string" />
+            <element name="agendaItems" type="fx:AgendaItem" minOccurs="0" maxOccurs = "unbounded" />
+        </sequence>
+    </complexType>-->
+    
+    <complexType name="AgendaItem">
+        <sequence>
+            <element name = "Id" type = "string" />
+            <element name = "Name" type = "string" />
+            <element name = "Number" type = "int" />
+            <element name = "TypeId" type = "int" />
+            <element name = "Type" type = "string" />
+            <element name = "SetupId" type = "int" />
+            <element name = "Setup" type = "string" />
+            <element name = "Note" type = "string" />
+            <element name = "StartTimeString" type = "string" />
+            <element name = "EndTimeString" type = "string" />
+            <element name = "RequiredRoomSize" type = "int" />
+<!--            <element name = "RequiredRoomSizeUnits" type = "string" />-->
+            <element name = "ExpectedNumberOfPeople" type = "int" />
+            <element name = "IsRoomInfoRequired" type = "boolean" />
+            <element name = "IsTwentyFourHourHoldRequired" type = "boolean" />
+            <element name = "IsLocatedAtPrimaryEventVenue" type = "boolean" />
+            <element name = "dayNumber" type = "string" />
+            <element name = "Days" type = "fx:Days" minOccurs="0" maxOccurs = "unbounded" />
+        </sequence>
+    </complexType>
+    
+    <complexType name="Days">
+        <sequence>
+            <element name = "DayNumber" type = "int" />
+            <element name = "DateString" type = "string" />   
+        </sequence>    
+    </complexType>
+    
+    <complexType name="HelloWorld">
+        <sequence>
+            <element name = "hello" type = "string" minOccurs="1" />
+        </sequence>
+    </complexType>
+    
+<!--    <simpleType name="AgendaItemType">
+        <restriction base="string">
+            <enumeration value="Break"/>
+            <enumeration value="Breakout"/>
+            <enumeration value="Breakout"/>
+            <enumeration value="General Session"/>
+            <enumeration value="Meeting"/>
+            <enumeration value="Reception"/>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="AgendaItemSetup">
+        <restriction base="string">
+            <enumeration value="Buffet"/>
+            <enumeration value="Plated"/>
+            <enumeration value="Classroom"/>
+            <enumeration value="Conference"/>
+            <enumeration value="Herringbone"/>            
+        </restriction>
+    </simpleType>-->
+</schema>     

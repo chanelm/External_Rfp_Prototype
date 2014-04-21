@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb" xmlns:annox="http://annox.dev.java.net" jaxb:extensionBindingPrefixes="annox" xmlns:jl="http://annox.dev.java.net/java.lang">
+    <jaxb:bindings schemaLocation = "Rfp.xsd" node = "/xs:schema">     
+<!--        <jaxb:globalBindings>
+            <xjc:serializable uid="-6026937020915831338" />
+            <xjc:javaType name="java.util.Date" xmlType="xs:time" adapter="com.cvent.rfp.adapter.DateAdapter" />
+            <xjc:javaType name="java.util.Date" xmlType="xs:date" adapter="com.cvent.rfp.adapter.DateAdapter" /> 
+        </jaxb:globalBindings>-->
+        
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.cvent.rfp" />
+        </jaxb:schemaBindings>
+
+        <!--Rfp Class -->
+        <jaxb:bindings  node="xs:complexType[@name='Rfp']/xs:sequence/xs:element[@name='accountId']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
+        <jaxb:bindings  node="xs:complexType[@name='Rfp']/xs:sequence/xs:element[@name='rfpStub']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
+        <jaxb:bindings  node="xs:complexType[@name='Rfp']/xs:sequence/xs:element[@name='rfpName']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
+        <!-- Agenda Class -->
+<!--        <jaxb:bindings  node="xs:complexType[@name='Agenda']/xs:sequence/xs:element[@name='rfpStub']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
+        <jaxb:bindings  node="xs:complexType[@name='Agenda']/xs:sequence/xs:element[@name='rfpName']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
+        <jaxb:bindings  node="xs:complexType[@name='Agenda']/xs:sequence/xs:element[@name='agendaItems']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>-->
+
+        <!-- AgendaItem Class -->
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Id']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Name']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="javax.validation.constraints.Size">max=50</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Number']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="javax.validation.constraints.Min">0</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='TypeId']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="javax.validation.constraints.Min">0</annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>                
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Type']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='SetupId']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="javax.validation.constraints.Min">0</annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Setup']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Note']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="javax.validation.constraints.Size">max=2500</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='StartTimeString']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.Time.JsonTimeSerializer"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='EndTimeString']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.Time.JsonTimeSerializer"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='RequiredRoomSize']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="javax.validation.constraints.Min">1</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+<!--        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='RequiredRoomSizeUnits']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>-->
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='ExpectedNumberOfPeople']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="javax.validation.constraints.Min">1</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='IsRoomInfoRequired']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='IsTwentyFourHourHoldRequired']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='IsLocatedAtPrimaryEventVenue']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='dayNumber']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        
+        <!--Days Class -->
+        <jaxb:bindings  node="xs:complexType[@name='Days']/xs:sequence/xs:element[@name='DayNumber']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="javax.validation.constraints.Min">0</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='Days']/xs:sequence/xs:element[@name='DateString']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.Date.JsonDateSerializer"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
+        <!-- HelloWorld Class-->
+        <jaxb:bindings  node="xs:complexType[@name='HelloWorld']/xs:sequence/xs:element[@name='hello']">
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+            </annox:annotate>	
+        </jaxb:bindings>
+    </jaxb:bindings>
+</jaxb:bindings>
+
