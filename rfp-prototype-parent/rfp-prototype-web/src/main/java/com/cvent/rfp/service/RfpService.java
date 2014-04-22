@@ -7,14 +7,24 @@
 package com.cvent.rfp.service;
 
 
+import com.cvent.auth.AuthenticatorMethod;
+import com.cvent.auth.FakeBearerAuthorizationFilter;
+import com.cvent.auth.GrantedAPIKey;
+import com.cvent.auth.MultiPlexingAuthProvider;
+import com.cvent.auth.NoOpAuthenticator;
+import com.cvent.auth.RemoteAPIKeyAuthenticator;
+import com.cvent.auth.RemoteBearerAuthenticator;
+import com.cvent.auth.SecurityContext;
 import com.cvent.dropwizard.mybatis.MyBatisFactory;
 import com.cvent.filters.CORSFilter;
+import com.cvent.filters.SwaggerInternalFilter;
 import com.cvent.rfp.dao.RfpDAO;
 import com.cvent.rfp.health.RfpHealthCheck;
 import com.cvent.rfp.mapper.RfpMapper;
 import com.cvent.rfp.resources.HelloWorldResource;
 import com.cvent.rfp.resources.RfpResource;
 import com.wordnik.swagger.config.ConfigFactory;
+import com.wordnik.swagger.config.FilterFactory;
 import com.wordnik.swagger.config.ScannerFactory;
 import com.wordnik.swagger.config.SwaggerConfig;
 import com.wordnik.swagger.converter.ModelConverters;
@@ -26,20 +36,26 @@ import com.wordnik.swagger.jaxrs.listing.ResourceListingProvider;
 import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
 import com.wordnik.swagger.reader.ClassReaders;
 import com.yammer.dropwizard.Service;
+import com.yammer.dropwizard.auth.Authenticator;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.ManagedDataSource;
 import com.yammer.dropwizard.db.ManagedDataSourceFactory;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 
 /**
  *
  * @author yxie
  */
 public class RfpService extends Service<RfpServiceConfiguration> {
+    
+    /**
+     * A constant representing the environment dev.json configuration
+     */
+    private static final String ENV_DEV = "dev";
 
     @Override
     public void initialize(Bootstrap<RfpServiceConfiguration> btstrp) {
@@ -50,12 +66,12 @@ public class RfpService extends Service<RfpServiceConfiguration> {
     public void run(RfpServiceConfiguration t, Environment e) throws Exception {
         e.addResource(new HelloWorldResource(t.getMessages()));
         e.addHealthCheck(new RfpHealthCheck());
+        e.addFilter(new CORSFilter(), "/*");        
         
-        setMapperDateFormat(e);
+        //setMapperDateFormat(e);
+        initializeAuthentication(t, e);
         initializeMyBatis(t, e);
         initializeSwagger(t, e);
-        
-        e.addFilter(new CORSFilter(), "/*");
 
     }
     
@@ -63,6 +79,33 @@ public class RfpService extends Service<RfpServiceConfiguration> {
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
         e.getObjectMapperFactory().setDateFormat(dateFormat);
+    }
+    
+    /**
+     * Initialize authentication for this service
+     *
+     * @param RfpServiceConfiguration
+     * @param environment
+     */
+    @SuppressWarnings("unchecked") //supressed because of filters.add() annotation and not ready for jdk8 yet
+    private void initializeAuthentication(RfpServiceConfiguration t, Environment e) {
+        Map<AuthenticatorMethod, Authenticator<SecurityContext, ? extends GrantedAPIKey>> authenticators = new HashMap<>();
+
+        if (t.getEnvironmentName().equals(ENV_DEV)) {
+            e.getJerseyResourceConfig().getContainerRequestFilters().add(new FakeBearerAuthorizationFilter());
+            authenticators.put(AuthenticatorMethod.BEARER, new NoOpAuthenticator(t.getNoOpAccessToken()));
+            authenticators.put(AuthenticatorMethod.API_KEY, new NoOpAuthenticator(t.getNoOpAccessToken()));
+        } 
+        else {
+            RemoteBearerAuthenticator remoteBearerAuthenticator
+                    = new RemoteBearerAuthenticator(t.getAuthClientConfiguration(), e, t.getApiKey());
+            RemoteAPIKeyAuthenticator remoteAPIKeyAuthenticator
+                    = new RemoteAPIKeyAuthenticator(t.getAuthClientConfiguration(), e, t.getApiKey());
+            authenticators.put(AuthenticatorMethod.BEARER, remoteBearerAuthenticator);
+            authenticators.put(AuthenticatorMethod.API_KEY, remoteAPIKeyAuthenticator);
+        }
+
+        e.addProvider(new MultiPlexingAuthProvider<>(authenticators, "api.cvent.com"));
     }
     
     public void initializeMyBatis(RfpServiceConfiguration t, Environment e) throws Exception
@@ -100,7 +143,8 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         config.setApiVersion(t.getApiVersion());
         config.setBasePath(t.getSwaggerBasePath());
         
-        overrideUUIDObjectForSwagger();
+        FilterFactory.filter_$eq(new SwaggerInternalFilter());
+        overrideUUIDObjectForSwagger();        
     }
 
     /**

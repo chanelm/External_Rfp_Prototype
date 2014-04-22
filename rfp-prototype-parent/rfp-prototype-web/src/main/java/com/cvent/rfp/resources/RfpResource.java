@@ -7,12 +7,15 @@
 package com.cvent.rfp.resources;
 
 
+import com.cvent.auth.AuthenticatorMethod;
+import com.cvent.auth.Authority;
+import com.cvent.auth.GrantedAPIKey;
+import com.cvent.filters.SwaggerInternalFilter;
 import com.cvent.rfp.AgendaItem;
 import com.cvent.rfp.Days;
 import com.cvent.rfp.Rfp;
 import com.cvent.rfp.dao.RfpDAO;
 import com.cvent.rfp.util.StringHelper;
-import com.cvent.rfp.util.ValidationHelper;
 import com.cvent.util.ResponseUtils;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -20,15 +23,12 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import com.yammer.dropwizard.jersey.ConstraintViolations;
-import com.yammer.dropwizard.validation.ValidationMethod;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import javax.validation.Validation;
-import javax.validation.executable.ValidateOnExecution;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -76,6 +76,7 @@ public class RfpResource {
     /**
      *
      * @param uriInfo
+     * @param grantedAPIKey
      * @param rfpStub
      * @return
      * @throws Exception
@@ -90,9 +91,12 @@ public class RfpResource {
     })
     public Response getRfp( 
             @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
             @PathParam("rfpStub") UUID  rfpStub
-            ) throws Exception {
+            ) throws Exception 
+    {
          try {
             Rfp rfp = dao.getRfp(rfpStub.toString());
             if (rfp == null) {
@@ -107,6 +111,7 @@ public class RfpResource {
     /**
      *
      * @param uriInfo
+     * @param grantedAPIKey
      * @param rfpStub
      * @return
      * @throws Exception
@@ -119,12 +124,14 @@ public class RfpResource {
       @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
       @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
     })
-    @ValidateOnExecution
     public Response getRfpAgendaItem( 
             @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
             @PathParam("rfpStub") UUID  rfpStub
-            ) throws Exception {
+            ) throws Exception 
+    {
          try {
             List<AgendaItem> ai = dao.getRfpAgendaItemListByRfpStub(rfpStub.toString());
             if (ai == null) {
@@ -139,6 +146,7 @@ public class RfpResource {
     /**
      *
      * @param uriInfo
+     * @param grantedAPIKey
      * @param rfpStub
      * @param agendaItemStub
      * @return
@@ -153,6 +161,8 @@ public class RfpResource {
     })
     public Response deleteAgendaItemByStub(
             @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
             @PathParam("rfpStub") UUID rfpStub,
             @ApiParam(value = "rfp agenda item stub", required = true)
@@ -177,6 +187,7 @@ public class RfpResource {
     /**
      *
      * @param uriInfo
+     * @param grantedAPIKey
      * @param rfpStub
      * @param agendaItemName
      * @param agendaItemTypeId
@@ -204,6 +215,8 @@ public class RfpResource {
     })
     public Response createAgendaItem(
             @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
             @PathParam("rfpStub") UUID rfpStub,
             @ApiParam(value = "agenda item name", required = false)
@@ -242,28 +255,13 @@ public class RfpResource {
                 return ResponseUtils.getErrorResponse(HttpStatus.BAD_REQUEST_400, BAD_REQUEST);
             }
             
-//            List<String> errorList = ValidationHelper.validateAgendaItem(
-//                    agendaItemName,
-//                    agendaItemTypeId,
-//                    agendaItemSetupId,
-//                    agendaAddlNote,
-//                    startTime,
-//                    endTime,
-//                    roomSize,
-//                    attendeeCount,
-//                    infoRequiredFlag,
-//                    twentyFourHrHoldFlag,
-//                    hostVenueFlag,
-//                    dayNumber
-//            );
-            
             AgendaItem item = new AgendaItem();
             item.setName(agendaItemName);
             item.setSetupId(agendaItemTypeId);
             item.setSetupId(agendaItemSetupId);
             item.setNote(agendaAddlNote);
-            item.setStartTimeString(startTime);
-            item.setEndTimeString(endTime);
+            item.setStartTime(startTime);
+            item.setEndTime(endTime);
             item.setRequiredRoomSize(roomSize);
             item.setExpectedNumberOfPeople(attendeeCount);
             item.setDayNumber(dayNumber);
@@ -311,6 +309,7 @@ public class RfpResource {
     /**
      *
      * @param uriInfo
+     * @param grantedAPIKey
      * @param rfpStub
      * @param agendaItemStub
      * @param agendaItemName
@@ -339,6 +338,8 @@ public class RfpResource {
     })
     public Response updateAgendaItemByStub(
             @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
             @PathParam("rfpStub") UUID rfpStub,
             @ApiParam(value = "rfp agenda item stub", required = true)
@@ -389,8 +390,8 @@ public class RfpResource {
             agendaItemTypeId = (agendaItemTypeId == 0)? agendaItem.getTypeId() : agendaItemTypeId;
             agendaItemSetupId = (agendaItemSetupId == 0)? agendaItem.getSetupId() : agendaItemSetupId;
             agendaAddlNote = StringHelper.isNullOrEmpty(agendaAddlNote)? agendaItem.getNote() : agendaAddlNote;
-            startTime = StringHelper.isNullOrEmpty(startTime)? agendaItem.getStartTimeString() : startTime;
-            endTime = StringHelper.isNullOrEmpty(endTime)? agendaItem.getEndTimeString() : endTime;
+            startTime = StringHelper.isNullOrEmpty(startTime)? agendaItem.getStartTime() : startTime;
+            endTime = StringHelper.isNullOrEmpty(endTime)? agendaItem.getEndTime() : endTime;
             roomSize = (roomSize == 0)? agendaItem.getRequiredRoomSize() : roomSize;
             attendeeCount = (attendeeCount == 0)? agendaItem.getExpectedNumberOfPeople() : attendeeCount;
             boolean infoRequiredFlag = (infoRequiredBooleanFlag == null)? agendaItem.isIsRoomInfoRequired() : infoRequiredBooleanFlag;
@@ -403,8 +404,8 @@ public class RfpResource {
             item.setTypeId(agendaItemTypeId);
             item.setSetupId(agendaItemSetupId);
             item.setNote(agendaAddlNote);
-            item.setStartTimeString(startTime);
-            item.setEndTimeString(endTime);
+            item.setStartTime(startTime);
+            item.setEndTime(endTime);
             item.setRequiredRoomSize(roomSize);
             item.setExpectedNumberOfPeople(attendeeCount);
             item.setDayNumber(dayNumber);
@@ -433,9 +434,9 @@ public class RfpResource {
                     dayNumber);
             if(updatedRowNum > 0)
             {
-                return ResponseUtils.getErrorResponse(HttpStatus.OK_200, "Agenda Item successfully updated.");
+                return ResponseUtils.getErrorResponse(HttpStatus.OK_200, OK);
             }
-             return ResponseUtils.getErrorResponse(HttpStatus.NOT_FOUND_404, "The agenda item you want to update does not exist in database.");
+             return ResponseUtils.getErrorResponse(HttpStatus.NOT_FOUND_404, NOT_FOUND);
         }
         catch (ConstraintViolationException cve)
         {
@@ -443,7 +444,7 @@ public class RfpResource {
         }
         catch (Exception ex)
         {
-            return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, ex.getMessage());
+            return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, INTERNAL_SERVER_ERROR + ex.getMessage());
         }
     }
 }

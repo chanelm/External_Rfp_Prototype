@@ -1,6 +1,21 @@
 {
+    "http": {
+        "rootPath": "/*",
+        "adminPort": 8083,
+        "port": 8082,
+        "requestLog": {
+            "file": {
+                "enabled": false
+            },
+            "console": {
+                "enabled": false
+            }
+        }
+    },    
+    "environmentName": "dev",
+    "apiKey": "apiKey",
     "apiVersion": "1.0.5",
-    "swaggerBasePath": "http://localhost:8080",
+    "swaggerBasePath": "http://localhost:8082",
     "messages": {
         "hello": "Prototype for project External RFP"
     },
@@ -15,5 +30,37 @@
     "maxWaitForConnection": "30s",
     "checkConnectionWhileIdle": true,
     "checkConnectionHealthWhenIdleFor": "10s"
+    },
+    "authClient": {
+        "endpoint": "http://hq04d2rpt005:8095/auth",
+        "config": {
+            "retries": 3,
+            "timeout": "1 second",
+            "connectionTimeout": "2 seconds",
+            "timeToLive": "1 minute",
+            "cookiesEnabled": false,
+            "maxConnections": 1024,
+            "maxConnectionsPerRoute": 1024,
+            "keepAlive": "30 seconds",
+            "minThreads": 1,
+            "maxThreads": 128,
+            "gzipEnabled": true,
+            "gzipEnabledForRequests": true
+        }
+    },
+    "noOpAccessToken": {
+        "appId": 0,
+        "accessToken": "65f83885027158d8e7438f5b4bcaeba9",
+        "authorization": {
+            "roles": [
+                "ADMIN",
+                "SYSTEM_USER"
+            ]
+        },
+        "accessTokenTTL": 3600,
+        "created": 1393441936000,
+        "lastModified": 1393441936000,
+        "apiKey": "5d319f75d28a6e32b3975083637ba713",
+        "apiSecret": "b984de0916e45d768a2964306421727a"
     }
 }

@@ -43,8 +43,8 @@
             <element name = "SetupId" type = "int" />
             <element name = "Setup" type = "string" />
             <element name = "Note" type = "string" />
-            <element name = "StartTimeString" type = "string" />
-            <element name = "EndTimeString" type = "string" />
+            <element name = "StartTime" type = "string" />
+            <element name = "EndTime" type = "string" />
             <element name = "RequiredRoomSize" type = "int" />
 <!--            <element name = "RequiredRoomSizeUnits" type = "string" />-->
             <element name = "ExpectedNumberOfPeople" type = "int" />
@@ -59,7 +59,7 @@
     <complexType name="Days">
         <sequence>
             <element name = "DayNumber" type = "int" />
-            <element name = "DateString" type = "string" />   
+            <element name = "Date" type = "string" />   
         </sequence>    
     </complexType>
     

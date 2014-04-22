@@ -6,6 +6,10 @@
 
 package com.cvent.rfp.resources;
 
+import com.cvent.auth.AuthenticatorMethod;
+import com.cvent.auth.Authority;
+import com.cvent.auth.GrantedAPIKey;
+import com.cvent.filters.SwaggerInternalFilter;
 import com.cvent.rfp.HelloWorld;
 import com.wordnik.swagger.annotations.*;
 import javax.ws.rs.GET;
@@ -35,6 +39,8 @@ public class HelloWorldResource {
       @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public Response sayHello( 
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value="ID for retrieve hello world", required = false) 
             @PathParam("helloId") int helloId) throws Exception {
         return Response.ok(conf).build();

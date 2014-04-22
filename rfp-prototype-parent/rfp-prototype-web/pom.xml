@@ -65,6 +65,12 @@
             <groupId>com.yammer.dropwizard</groupId>
             <artifactId>dropwizard-db</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cvent.auth-service</groupId>
+            <artifactId>auth-service-core</artifactId>
+            <version>1.17</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 

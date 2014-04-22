@@ -201,8 +201,8 @@ public interface RfpMapper {
         @Result(property = "setupId", column = "agenda_item_setup_id"),
         @Result(property = "setup", column = "agenda_item_setup_name"),
         @Result(property = "note", column = "agenda_addl_info"),
-        @Result(property = "startTimeString", column = "start_time"),
-        @Result(property = "endTimeString", column = "end_time"),
+        @Result(property = "startTime", column = "start_time"),
+        @Result(property = "endTime", column = "end_time"),
         @Result(property = "requiredRoomSize", column = "room_size"),
         @Result(property = "expectedNumberOfPeople", column = "attendee_count"),
         @Result(property = "isRoomInfoRequired", column = "room_info_required_flag"),
@@ -234,8 +234,8 @@ public interface RfpMapper {
         @Result(property = "setupId", column = "agenda_item_setup_id"),
         @Result(property = "setup", column = "agenda_item_setup_name"),
         @Result(property = "note", column = "agenda_addl_info"),
-        @Result(property = "startTimeString", column = "start_time"),
-        @Result(property = "endTimeString", column = "end_time"),
+        @Result(property = "startTime", column = "start_time"),
+        @Result(property = "endTime", column = "end_time"),
         @Result(property = "requiredRoomSize", column = "room_size"),
         @Result(property = "expectedNumberOfPeople", column = "attendee_count"),
         @Result(property = "isRoomInfoRequired", column = "room_info_required_flag"),
@@ -261,7 +261,7 @@ public interface RfpMapper {
     @Options(statementType = StatementType.CALLABLE)
     @Results(value = {
         @Result(property = "dayNumber", column = "day_number"),
-        @Result(property = "dateString", column = "date")
+        @Result(property = "date", column = "date")
         //@Result(property = "date", column = "date", jdbcType = JdbcType.DATE, javaType = Date.class)
     })
     public List<Days> getAgendaItemDaysByStub(

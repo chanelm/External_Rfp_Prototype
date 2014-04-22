@@ -11,6 +11,12 @@
             <jaxb:package name="com.cvent.rfp" />
         </jaxb:schemaBindings>
 
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.cvent.rfp.constraints.ValidAgendaItem"></annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+
         <!--Rfp Class -->
         <jaxb:bindings  node="xs:complexType[@name='Rfp']/xs:sequence/xs:element[@name='accountId']"> 
             <annox:annotate target="field">
@@ -95,16 +101,16 @@
                 <annox:annotate  annox:class="javax.validation.constraints.Size">max=2500</annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
-        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='StartTimeString']"> 
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='StartTime']"> 
             <annox:annotate target="field">
                 <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
-                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.Time.JsonTimeSerializer"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.JsonTimeSerializer"></annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
-        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='EndTimeString']"> 
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='EndTime']"> 
             <annox:annotate target="field">
                 <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
-                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.Time.JsonTimeSerializer"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.JsonTimeSerializer"></annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
         <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='RequiredRoomSize']"> 
@@ -152,10 +158,10 @@
                 <annox:annotate  annox:class="javax.validation.constraints.Min">0</annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
-        <jaxb:bindings  node="xs:complexType[@name='Days']/xs:sequence/xs:element[@name='DateString']"> 
+        <jaxb:bindings  node="xs:complexType[@name='Days']/xs:sequence/xs:element[@name='Date']"> 
             <annox:annotate target="field">
                 <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
-                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.Date.JsonDateSerializer"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.databind.annotation.JsonSerialize" using="com.cvent.rfp.serializers.JsonDateSerializer"></annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
 

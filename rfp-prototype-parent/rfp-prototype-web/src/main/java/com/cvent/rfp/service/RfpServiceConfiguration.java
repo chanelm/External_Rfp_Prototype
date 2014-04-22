@@ -1,11 +1,14 @@
 package com.cvent.rfp.service;
 
+import com.cvent.auth.GrantedAccessToken;
+import com.cvent.client.ClientConfiguration;
 import com.cvent.rfp.HelloWorld;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class RfpServiceConfiguration extends Configuration {
 
@@ -25,6 +28,24 @@ public class RfpServiceConfiguration extends Configuration {
     @NotNull
     @JsonProperty
     private DatabaseConfiguration databaseConfig;
+    
+    @JsonProperty
+    @Valid
+    private GrantedAccessToken noOpAccessToken;
+    
+    @NotEmpty
+    @JsonProperty
+    private String environmentName;
+    
+    @Valid
+    @NotNull
+    @JsonProperty
+    private ClientConfiguration authClient;  
+    
+    @JsonProperty
+    @NotNull
+    @NotEmpty
+    private String apiKey;
     
     public DatabaseConfiguration getDatabaseConfiguration()
     {
@@ -47,5 +68,22 @@ public class RfpServiceConfiguration extends Configuration {
 
     public void setMessages(HelloWorld messages) {
         this.messages = messages;
+    }
+    
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+    
+    public GrantedAccessToken getNoOpAccessToken() {
+        return noOpAccessToken;
+    }
+    
+    public ClientConfiguration getAuthClientConfiguration() {
+        return authClient;
+    }    
+    
+    public String getApiKey()
+    {
+        return apiKey;
     }
 }
