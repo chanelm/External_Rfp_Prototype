@@ -47,6 +47,14 @@ public class RfpServiceConfiguration extends Configuration {
     @NotEmpty
     private String apiKey;
     
+    @JsonProperty
+    private boolean authRequired = true;
+    
+    public boolean getAuthRequired() {
+        return authRequired;
+    }
+    
+    
     public DatabaseConfiguration getDatabaseConfiguration()
     {
         return databaseConfig;

@@ -58,6 +58,7 @@ public class RfpResource {
     private static final String OK = "Http operation is successful.";
     private static final String BAD_REQUEST = "Bad Request. Detail: ";
     private static final String NOT_FOUND  = "The requested object is not found.";
+    private static final String UNAUTHORIZED = "The provided bearer token is not authorized";
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error. Details: ";
     private static final String UNPROCESSABLE_ENTITY = "Invalid entity parameter(s)";
 
@@ -85,9 +86,8 @@ public class RfpResource {
     @Path("/{rfpStub}")
     @ApiOperation(value = "Get Rpf Object", notes = "This method gets Rfp Object from database.", response = Rfp.class)
     @ApiResponses(value = {
-      @ApiResponse(code = HttpStatus.OK_200, message = OK),
-      @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
-      @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
+        @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
+        @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
     })
     public Response getRfp( 
             @Context UriInfo uriInfo,
@@ -120,9 +120,9 @@ public class RfpResource {
     @Path("/{rfpStub}/AgendaItems")
     @ApiOperation(value = "Get Rpf AgendaItem Object", notes = "This method gets Rfp AgendaItem Object from database.", response = AgendaItem.class)
     @ApiResponses(value = {
-      @ApiResponse(code = HttpStatus.OK_200, message = BAD_REQUEST),
-      @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
-      @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
+        @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
+        @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
     })
     public Response getRfpAgendaItem( 
             @Context UriInfo uriInfo,
@@ -156,6 +156,7 @@ public class RfpResource {
     @Path("/{rfpStub}/AgendaItems/{agendaItemStub}")
     @ApiOperation(value = "Delete rfp agenda item by stub", notes = "This method delete rfp agenda item by agenda_item_stub", response = String.class)
     @ApiResponses(value = {
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
         @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
         @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
     })
@@ -209,6 +210,7 @@ public class RfpResource {
     @ApiOperation(value = "Create new agenda item for this rfp", notes = "This method create rfp agenda item for this rfp", response = String.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.BAD_REQUEST_400, message = BAD_REQUEST),
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),        
         @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),        
         @ApiResponse(code = HttpStatus.UNPROCESSABLE_ENTITY_422, message = UNPROCESSABLE_ENTITY),
         @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
@@ -332,6 +334,7 @@ public class RfpResource {
     @ApiOperation(value = "Update agenda item name by agenda item stub", notes = "This method update rfp agenda item by agenda_item_stub", response = String.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.BAD_REQUEST_400, message = BAD_REQUEST),
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
         @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
         @ApiResponse(code = HttpStatus.UNPROCESSABLE_ENTITY_422, message = UNPROCESSABLE_ENTITY),
         @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)

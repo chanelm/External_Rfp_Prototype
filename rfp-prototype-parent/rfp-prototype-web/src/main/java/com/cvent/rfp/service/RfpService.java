@@ -68,44 +68,46 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         e.addHealthCheck(new RfpHealthCheck());
         e.addFilter(new CORSFilter(), "/*");        
         
-        //setMapperDateFormat(e);
-        initializeAuthentication(t, e);
+        
         initializeMyBatis(t, e);
+        initializeAuthentication(t, e);
         initializeSwagger(t, e);
 
     }
     
-    public void setMapperDateFormat(Environment e)
-    {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
-        e.getObjectMapperFactory().setDateFormat(dateFormat);
-    }
+//    public void setMapperDateFormat(Environment e)
+//    {
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
+//        e.getObjectMapperFactory().setDateFormat(dateFormat);
+//    }
     
-    /**
+/**
      * Initialize authentication for this service
      *
-     * @param RfpServiceConfiguration
+     * @param authClientConfiguration
      * @param environment
      */
     @SuppressWarnings("unchecked") //supressed because of filters.add() annotation and not ready for jdk8 yet
-    private void initializeAuthentication(RfpServiceConfiguration t, Environment e) {
-        Map<AuthenticatorMethod, Authenticator<SecurityContext, ? extends GrantedAPIKey>> authenticators = new HashMap<>();
+    private void initializeAuthentication(RfpServiceConfiguration configuration, Environment environment) {
+        Map<AuthenticatorMethod, Authenticator<SecurityContext, ? extends GrantedAPIKey>> authenticators
+                = new HashMap<>();
 
-        if (t.getEnvironmentName().equals(ENV_DEV)) {
-            e.getJerseyResourceConfig().getContainerRequestFilters().add(new FakeBearerAuthorizationFilter());
-            authenticators.put(AuthenticatorMethod.BEARER, new NoOpAuthenticator(t.getNoOpAccessToken()));
-            authenticators.put(AuthenticatorMethod.API_KEY, new NoOpAuthenticator(t.getNoOpAccessToken()));
-        } 
-        else {
+        if (!configuration.getAuthRequired()) {
+            environment.getJerseyResourceConfig().getContainerRequestFilters().add(new FakeBearerAuthorizationFilter());
+            authenticators.put(AuthenticatorMethod.BEARER, new NoOpAuthenticator(configuration.getNoOpAccessToken()));
+            authenticators.put(AuthenticatorMethod.API_KEY, new NoOpAuthenticator(configuration.getNoOpAccessToken()));
+        } else {
             RemoteBearerAuthenticator remoteBearerAuthenticator
-                    = new RemoteBearerAuthenticator(t.getAuthClientConfiguration(), e, t.getApiKey());
+                    = new RemoteBearerAuthenticator(configuration.getAuthClientConfiguration(),
+                            environment, configuration.getApiKey());
             RemoteAPIKeyAuthenticator remoteAPIKeyAuthenticator
-                    = new RemoteAPIKeyAuthenticator(t.getAuthClientConfiguration(), e, t.getApiKey());
+                    = new RemoteAPIKeyAuthenticator(configuration.getAuthClientConfiguration(),
+                            environment, configuration.getApiKey());
             authenticators.put(AuthenticatorMethod.BEARER, remoteBearerAuthenticator);
             authenticators.put(AuthenticatorMethod.API_KEY, remoteAPIKeyAuthenticator);
         }
 
-        e.addProvider(new MultiPlexingAuthProvider<>(authenticators, "api.cvent.com"));
+        environment.addProvider(new MultiPlexingAuthProvider<>(authenticators, "api.cvent.com"));
     }
     
     public void initializeMyBatis(RfpServiceConfiguration t, Environment e) throws Exception

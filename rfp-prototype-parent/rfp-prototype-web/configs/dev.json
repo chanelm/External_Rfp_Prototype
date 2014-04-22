@@ -48,6 +48,7 @@
             "gzipEnabledForRequests": true
         }
     },
+    "authRequired": false,
     "noOpAccessToken": {
         "appId": 0,
         "accessToken": "65f83885027158d8e7438f5b4bcaeba9",

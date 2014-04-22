@@ -39,13 +39,10 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
         String dateMessage = null;
         String nameTypeMessage = null;
         String dayNumberMessage = null;
-
-        Date startTime;
-        Date endTime;
         
         try{
-            startTime = DateFormatHelper.parseDate(item.getStartTime());
-            endTime = DateFormatHelper.parseDate(item.getEndTime());
+            Date startTime = DateFormatHelper.parseDate(item.getStartTime());
+            Date endTime = DateFormatHelper.parseDate(item.getEndTime());
 
             if(minuteList.contains(startTime.getMinutes()) && minuteList.contains(endTime.getMinutes()))
             {
@@ -84,11 +81,11 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
         if (!isValid) {
             context.disableDefaultConstraintViolation();
             if(!StringHelper.isNullOrEmpty(dateMessage)) 
-                context.buildConstraintViolationWithTemplate(dateMessage).addNode("agendaItem").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate(dateMessage).addConstraintViolation();
             if(!StringHelper.isNullOrEmpty(nameTypeMessage))
-                context.buildConstraintViolationWithTemplate(nameTypeMessage).addNode("agendaItem").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate(nameTypeMessage).addConstraintViolation();
             if(!StringHelper.isNullOrEmpty(dayNumberMessage))
-                context.buildConstraintViolationWithTemplate(dayNumberMessage).addNode("agendaItem").addConstraintViolation();
+                context.buildConstraintViolationWithTemplate(dayNumberMessage).addConstraintViolation();
         }
 
         return isValid;
