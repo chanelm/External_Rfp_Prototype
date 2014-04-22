@@ -29,6 +29,7 @@ import java.util.UUID;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -50,6 +51,7 @@ import org.eclipse.jetty.http.HttpStatus;
 
 @Path(value = "CSN/Planner/RFPs")
 @Api(value = "CSN/Planner/RFPs", description = "Get Rfp object Info")
+@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class RfpResource {
     
