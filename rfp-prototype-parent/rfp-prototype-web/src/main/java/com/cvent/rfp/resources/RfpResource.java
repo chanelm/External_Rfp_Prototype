@@ -58,7 +58,7 @@ import org.eclipse.jetty.http.HttpStatus;
 public class RfpResource {
     
     private RfpDAO dao;
-    private final LuDAO luDAO = new LuDAO();
+    private LuDAO luDao;
 
     private static final String OK = "Http operation is successful.";
     private static final String BAD_REQUEST = "Bad Request. Detail: ";
@@ -69,14 +69,20 @@ public class RfpResource {
 
     public RfpResource(){}
     
-    public RfpResource(RfpDAO dao)
+    public RfpResource(RfpDAO dao, LuDAO luDao)
     {
         this.dao = dao;
+        this.luDao = luDao;
     }
     
     public void setRfpDAO(RfpDAO dao)
     {
         this.dao = dao;
+    }
+    
+    public void setLuDAO(LuDAO luDao)
+    {
+        this.luDao = luDao;
     }
     
     /**
@@ -266,8 +272,8 @@ public class RfpResource {
             item.setName(agendaItemName);
             item.setSetupId(agendaItemTypeId);
             item.setSetupId(agendaItemSetupId);
-            item.setIsTypeIdValid(luDAO.validateLookUp(LookUp.LU_AGENDA_ITEM_TYPE_TABLE_NAME, LookUp.LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME, agendaItemTypeId));
-            item.setIsSetupIdValid(luDAO.validateLookUp(LookUp.LU_AGENDA_ITEM_SETUP_TABLE_NAME, LookUp.LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME, agendaItemSetupId));
+            item.setIsTypeIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_TYPE_TABLE_NAME, LookUp.LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME, agendaItemTypeId));
+            item.setIsSetupIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_SETUP_TABLE_NAME, LookUp.LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME, agendaItemSetupId));
             item.setNote(agendaAddlNote);
             item.setStartTime(startTime);
             item.setEndTime(endTime);
@@ -413,8 +419,8 @@ public class RfpResource {
             item.setName(agendaItemName);
             item.setTypeId(agendaItemTypeId);
             item.setSetupId(agendaItemSetupId);
-            item.setIsTypeIdValid(luDAO.validateLookUp(LookUp.LU_AGENDA_ITEM_TYPE_TABLE_NAME, LookUp.LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME, agendaItemTypeId));
-            item.setIsSetupIdValid(luDAO.validateLookUp(LookUp.LU_AGENDA_ITEM_SETUP_TABLE_NAME, LookUp.LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME, agendaItemSetupId));
+            item.setIsTypeIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_TYPE_TABLE_NAME, LookUp.LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME, agendaItemTypeId));
+            item.setIsSetupIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_SETUP_TABLE_NAME, LookUp.LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME, agendaItemSetupId));
             item.setNote(agendaAddlNote);
             item.setStartTime(startTime);
             item.setEndTime(endTime);

@@ -18,6 +18,7 @@ import com.cvent.auth.SecurityContext;
 import com.cvent.dropwizard.mybatis.MyBatisFactory;
 import com.cvent.filters.CORSFilter;
 import com.cvent.filters.SwaggerInternalFilter;
+import com.cvent.rfp.dao.LuDAO;
 import com.cvent.rfp.dao.RfpDAO;
 import com.cvent.rfp.health.RfpHealthCheck;
 import com.cvent.rfp.mapper.RfpMapper;
@@ -122,7 +123,11 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         sessionFactory.getConfiguration().addMapper(RfpMapper.class);
         
         RfpDAO rfpDAO = new RfpDAO(sessionFactory);
-        e.addResource(new RfpResource(rfpDAO));
+        LuDAO luDAO = new LuDAO(sessionFactory);
+        e.addResource(new RfpResource(rfpDAO, luDAO));
+        
+        
+
     }
     
     public void initializeSwagger(RfpServiceConfiguration t, Environment e)
