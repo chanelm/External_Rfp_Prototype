@@ -13,9 +13,9 @@ package com.cvent.constants;
 public final class LookUp {
     
     public final static String LU_AGENDA_ITEM_TYPE_TABLE_NAME = "dbo.LU_AGENDA_ITEM_TYPE";
-    public final static String LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME = "dbo.agenda_item_type_id";
+    public final static String LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME = "agenda_item_type_id";
     
-    public final static String LU_AGENDA_ITEM_SETUP_TABLE_NAME = "LU_AGENDA_ITEM_SETUP";
+    public final static String LU_AGENDA_ITEM_SETUP_TABLE_NAME = "dbo.LU_AGENDA_ITEM_SETUP";
     public final static String LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME = "agenda_item_setup_id";
 
 }

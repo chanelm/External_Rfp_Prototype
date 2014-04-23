@@ -21,6 +21,7 @@ import com.cvent.filters.SwaggerInternalFilter;
 import com.cvent.rfp.dao.LuDAO;
 import com.cvent.rfp.dao.RfpDAO;
 import com.cvent.rfp.health.RfpHealthCheck;
+import com.cvent.rfp.mapper.LuMapper;
 import com.cvent.rfp.mapper.RfpMapper;
 import com.cvent.rfp.resources.HelloWorldResource;
 import com.cvent.rfp.resources.RfpResource;
@@ -121,6 +122,7 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         MyBatisFactory factory = new MyBatisFactory();
         SqlSessionFactory sessionFactory = factory.build(e, t.getDatabaseConfiguration(), ds, "sqlserver");
         sessionFactory.getConfiguration().addMapper(RfpMapper.class);
+        sessionFactory.getConfiguration().addMapper(LuMapper.class);
         
         RfpDAO rfpDAO = new RfpDAO(sessionFactory);
         LuDAO luDAO = new LuDAO(sessionFactory);

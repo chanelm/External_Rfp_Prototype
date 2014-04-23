@@ -50,24 +50,24 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
                 if (startTime.compareTo(endTime) >= 0)
                 {
                     isValid = false;
-                    messageList.add("startTime should be before endTime.");
+                    messageList.add("Error: startTime should be before endTime.");
                 }
             }
             else
             {
                 isValid = false;
-                messageList.add("Minute of startTime/endTime are not in 0/15/30/45.");
+                messageList.add("Error: minute of startTime/endTime are not in 0/15/30/45.");
             }
         } catch (ParseException ex) {
             isValid = false;
-            messageList.add("startTime/endTime can not be parsed correctly.");
+            messageList.add("Error: startTime/endTime can not be parsed correctly.");
         }
 
         //Validate AgendaItemName/AgendaItemTypeId
         if (StringHelper.isNullOrEmpty(item.getName()) && item.getTypeId() == 0)
         {
             isValid = false;
-            messageList.add("Name and Type cannot both be empty.");
+            messageList.add("Error: 'Name' and 'Type' cannot both be empty.");
         }
         
         //Validate DayNumber
@@ -76,7 +76,7 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
             for (String str : list) Integer.parseInt(str.trim());
         } catch(NumberFormatException ex) {
             isValid = false;
-            messageList.add("dayNumber input is in invalid format.");
+            messageList.add("Error: dayNumber input is in invalid format.");
         }
         
         //Validate AgendaItemTypeId
@@ -84,7 +84,7 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
             if(!item.isIsTypeIdValid())
             {
                 isValid = false;
-                messageList.add("typeId is not valid.");
+                messageList.add("Error: typeId is not valid.");
             }
         } catch(Exception ex)
         {
@@ -97,7 +97,7 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
             if(!item.isIsSetupIdValid())
             {
                 isValid = false;
-                messageList.add("setupId is not valid.");
+                messageList.add("Error: setupId is not valid.");
             }
         } catch(Exception ex)
         {
