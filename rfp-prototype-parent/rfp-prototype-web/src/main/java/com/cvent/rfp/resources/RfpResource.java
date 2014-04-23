@@ -31,6 +31,7 @@ import java.util.UUID;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -362,6 +363,88 @@ public class RfpResource {
      * @param uriInfo
      * @param grantedAPIKey
      * @param RfpId
+     * @param item
+     * @return
+     * @throws Exception
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{RfpId}/AgendaItems")
+    @ApiOperation(value = "Create new agenda item for this rfp (Json input)", notes = "This method create rfp agenda item for this rfp", response = String.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpStatus.BAD_REQUEST_400, message = BAD_REQUEST),
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),        
+        @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),        
+        @ApiResponse(code = HttpStatus.UNPROCESSABLE_ENTITY_422, message = UNPROCESSABLE_ENTITY),
+        @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
+    })
+    public Response createAgendaItemJson(
+            @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
+            @ApiParam(value = "rfp stub", required = true)
+            @PathParam("RfpId") UUID RfpId,
+            AgendaItem item
+    ) throws Exception
+    {
+        try
+        {   
+            Rfp rfp = dao.getRfp(RfpId.toString());
+            List<AgendaItem> itemList = dao.getRfpAgendaItemListByRfpStub(RfpId.toString());
+            
+            if(rfp == null)
+            {
+                return ResponseUtils.getErrorResponse(HttpStatus.BAD_REQUEST_400, BAD_REQUEST);
+            }
+            
+            item.setIsTypeIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_TYPE_TABLE_NAME, LookUp.LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME, item.getTypeId()));
+            item.setIsSetupIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_SETUP_TABLE_NAME, LookUp.LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME, item.getSetupId()));
+            
+            Set<ConstraintViolation<AgendaItem>> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(item);
+
+            if (violations.size() > 0) {
+                throw new ConstraintViolationException(ConstraintViolations.copyOf(violations));
+            }
+
+            int createdRowNum = dao.createAgendaItem(
+                    rfp.getAccountId(),
+                    RfpId.toString(),
+                    item.getName(),
+                    item.getTypeId(),
+                    item.getSetupId(),
+                    item.getNote(),
+                    item.getStartTime(),
+                    item.getEndTime(),
+                    item.getRequiredRoomSize(),
+                    item.getExpectedNumberOfPeople(),
+                    item.isIsRoomInfoRequired(),
+                    item.isIsTwentyFourHourHoldRequired(),
+                    item.isIsLocatedAtPrimaryEventVenue(),
+                    item.getDayNumber(),
+                    itemList.size());
+                
+                if(createdRowNum > 0)
+                {
+                    return ResponseUtils.getErrorResponse(HttpStatus.OK_200, OK);
+                }
+                
+                return ResponseUtils.getErrorResponse(HttpStatus.BAD_REQUEST_400, BAD_REQUEST);
+        
+        } catch(ConstraintViolationException ex)
+        {
+            throw ex;
+        }
+        catch (Exception ex)
+        {
+            return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, INTERNAL_SERVER_ERROR + ex.getMessage());
+        }
+    }
+    
+    /**
+     *
+     * @param uriInfo
+     * @param grantedAPIKey
+     * @param RfpId
      * @param Id
      * @param agendaItemName
      * @param agendaItemTypeId
@@ -508,4 +591,111 @@ public class RfpResource {
         }
     }
 
+    /**
+     *
+     * @param uriInfo
+     * @param grantedAPIKey
+     * @param RfpId
+     * @param Id
+     * @param item
+     * @return
+     * @throws Exception
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/RFP/{RfpId}/AgendaItem/{Id}")
+    @ApiOperation(value = "Update agenda item (Json input)", notes = "This method update rfp agenda item by agenda_item_stub", response = String.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpStatus.BAD_REQUEST_400, message = BAD_REQUEST),
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
+        @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
+        @ApiResponse(code = HttpStatus.UNPROCESSABLE_ENTITY_422, message = UNPROCESSABLE_ENTITY),
+        @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
+    })
+    public Response updateAgendaItemByStubJson(
+            @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
+            @ApiParam(value = "rfp stub", required = true)
+            @PathParam("RfpId") UUID RfpId,
+            @ApiParam(value = "rfp agenda item stub", required = true)
+            @PathParam("Id") UUID Id,
+            AgendaItem item
+            ) throws Exception
+    {
+        try
+        {   
+            Rfp rfp = dao.getRfp(RfpId.toString());
+            
+            if(rfp == null)
+            {
+                return ResponseUtils.getErrorResponse(HttpStatus.BAD_REQUEST_400, BAD_REQUEST);
+            }
+            
+            AgendaItem agendaItem = dao.getRfpAgendaByAgendaItemStub(rfp.getRfpStub(), Id.toString());
+            
+            if(agendaItem == null)
+            {
+                return ResponseUtils.getErrorResponse(HttpStatus.BAD_REQUEST_400, BAD_REQUEST);
+            }
+            
+            String dayNumberStr = "";
+            for(Days day : agendaItem.getDays())
+            {
+                dayNumberStr = String.format("%s,%s", day.getDayNumber(), dayNumberStr);
+            }
+            
+            item.setName(StringHelper.isNullOrEmpty(item.getName())? agendaItem.getName() : item.getName());
+            item.setNote(StringHelper.isNullOrEmpty(item.getNote())? agendaItem.getNote() : item.getNote());
+            item.setTypeId((item.getTypeId() == null)? agendaItem.getTypeId(): item.getTypeId());
+            item.setSetupId((item.getTypeId() == null)? agendaItem.getSetupId(): item.getTypeId());
+            item.setStartTime(StringHelper.isNullOrEmpty(item.getStartTime())? agendaItem.getStartTime() : item.getStartTime());
+            item.setEndTime(StringHelper.isNullOrEmpty(item.getEndTime())? agendaItem.getEndTime() : item.getEndTime());
+            item.setRequiredRoomSize((item.getRequiredRoomSize() == null)? agendaItem.getRequiredRoomSize() : item.getRequiredRoomSize());
+            item.setExpectedNumberOfPeople((item.getExpectedNumberOfPeople() == null)? agendaItem.getExpectedNumberOfPeople() : item.getExpectedNumberOfPeople());
+            item.setIsRoomInfoRequired((item.isIsRoomInfoRequired() == null)? agendaItem.isIsRoomInfoRequired() : item.isIsRoomInfoRequired());
+            item.setIsTwentyFourHourHoldRequired((item.isIsTwentyFourHourHoldRequired() == null)? agendaItem.isIsTwentyFourHourHoldRequired() : item.isIsTwentyFourHourHoldRequired());
+            item.setIsLocatedAtPrimaryEventVenue((item.isIsLocatedAtPrimaryEventVenue() == null)? agendaItem.isIsLocatedAtPrimaryEventVenue() : item.isIsLocatedAtPrimaryEventVenue());
+            item.setDayNumber(StringHelper.isNullOrEmpty(item.getDayNumber())? dayNumberStr : item.getDayNumber());
+            item.setIsTypeIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_TYPE_TABLE_NAME, LookUp.LU_AGENDA_ITEM_TYPE_ID_COLUMN_NAME, item.getTypeId()));
+            item.setIsSetupIdValid(luDao.validateLookUp(LookUp.LU_AGENDA_ITEM_SETUP_TABLE_NAME, LookUp.LU_AGENDA_ITEM_SETUP_ID_COLUMN_NAME, item.getSetupId()));
+            
+            Set<ConstraintViolation<AgendaItem>> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(item);
+
+            if (violations.size() > 0) {
+                throw new ConstraintViolationException(ConstraintViolations.copyOf(violations));
+            }
+
+            int updatedRowNum = dao.updateAgendaItemByStub(
+                    rfp.getAccountId(),
+                    RfpId.toString(),
+                    Id.toString(),
+                    item.getName(),
+                    item.getTypeId(),
+                    item.getSetupId(),
+                    item.getNote(),
+                    item.getStartTime(),
+                    item.getEndTime(),
+                    item.getRequiredRoomSize(),
+                    item.getExpectedNumberOfPeople(),
+                    item.isIsRoomInfoRequired(),
+                    item.isIsTwentyFourHourHoldRequired(),
+                    item.isIsLocatedAtPrimaryEventVenue(),
+                    item.getDayNumber());
+            if(updatedRowNum > 0)
+            {
+                return ResponseUtils.getErrorResponse(HttpStatus.OK_200, OK);
+            }
+             return ResponseUtils.getErrorResponse(HttpStatus.NOT_FOUND_404, NOT_FOUND);
+        }
+        catch (ConstraintViolationException cve)
+        {
+            throw cve;
+        }
+        catch (Exception ex)
+        {
+            return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, INTERNAL_SERVER_ERROR + ex.getMessage());
+        }
+    }    
+    
 }

@@ -153,14 +153,15 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         config.setBasePath(t.getSwaggerBasePath());
         
         FilterFactory.filter_$eq(new SwaggerInternalFilter());
-        overrideUUIDObjectForSwagger();        
+        OverrideUUIDObjectForSwagger();
+        //OverrideAgendaItemObjectForSwagger();
     }
 
     /**
      * Forces Swagger to render the model of the UUID class into a more user-friendly String format as opposed to the
      * default, which would represent the UUID class as an object containing leastSignificantBits & mostSignificantBits
      */
-    private void overrideUUIDObjectForSwagger() {
+    private void OverrideUUIDObjectForSwagger() {
         String jsonUUID = "{\"id\": \"UUID\", "
                 + "\"properties\": {"
                 + "   \"value\": {"
