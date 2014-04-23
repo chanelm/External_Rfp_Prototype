@@ -24,12 +24,12 @@ public class LuDAO {
         this.sessionFactory = sessionFactory;
     }
     
-    public boolean validateLookUpValue(String luTableName, String idColumnName, int idToValidate) throws Exception
+    public boolean validateLookUp(String luTableName, String luColumnName, int valueToValidate) throws Exception
     {
         try(SqlSession session = sessionFactory.openSession(true))
         {
             LuMapper mapper = session.getMapper(LuMapper.class);
-            int validatedRow = mapper.validateLookUpId(luTableName, idColumnName, idToValidate);
+            int validatedRow = mapper.validateLookUpId(luTableName, luColumnName, valueToValidate);
             
             return (validatedRow > 0);
         } catch (Exception ex) {

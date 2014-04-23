@@ -1,6 +1,7 @@
 com\cvent\rfp\serializers\JsonDateTimeSerializer.class
 com\cvent\rfp\package-info.class
 com\cvent\rfp\util\StringHelper.class
+com\cvent\constants\LookUp.class
 com\cvent\rfp\util\DateFormatHelper.class
 com\cvent\rfp\serializers\JsonTimeDeSerializer.class
 com\cvent\rfp\ObjectFactory.class
