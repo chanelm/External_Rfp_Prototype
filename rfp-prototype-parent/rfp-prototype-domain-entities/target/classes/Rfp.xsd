@@ -52,6 +52,8 @@
             <element name = "IsTwentyFourHourHoldRequired" type = "boolean" />
             <element name = "IsLocatedAtPrimaryEventVenue" type = "boolean" />
             <element name = "dayNumber" type = "string" />
+            <element name = "IsTypeIdValid" type = "boolean" />
+            <element name = "IsSetupIdValid" type = "boolean" />
             <element name = "Days" type = "fx:Days" minOccurs="0" maxOccurs = "unbounded" />
         </sequence>
     </complexType>

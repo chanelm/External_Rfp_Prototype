@@ -150,6 +150,16 @@
                 <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='IsTypeIdValid']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='IsSetupIdValid']"> 
+            <annox:annotate target="field">
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>
+            </annox:annotate>		
+        </jaxb:bindings>
         
         <!--Days Class -->
         <jaxb:bindings  node="xs:complexType[@name='Days']/xs:sequence/xs:element[@name='DayNumber']"> 

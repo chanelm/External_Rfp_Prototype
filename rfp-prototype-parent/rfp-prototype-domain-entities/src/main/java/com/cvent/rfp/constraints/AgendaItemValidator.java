@@ -13,7 +13,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 /**
@@ -36,10 +38,9 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
 
         List<Integer> minuteList = new ArrayList<>(Arrays.asList(0,15,30,45));
         boolean isValid = true;
-        String dateMessage = null;
-        String nameTypeMessage = null;
-        String dayNumberMessage = null;
+        List<String> messageList = new ArrayList<>();
         
+        //Validate startTime/endTime
         try{
             Date startTime = DateFormatHelper.parseDate(item.getStartTime());
             Date endTime = DateFormatHelper.parseDate(item.getEndTime());
@@ -49,43 +50,69 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
                 if (startTime.compareTo(endTime) >= 0)
                 {
                     isValid = false;
-                    dateMessage += "startTime should be before endTime. ";
+                    messageList.add("startTime should be before endTime.");
                 }
             }
             else
             {
                 isValid = false;
-                dateMessage += "Minute of startTime/endTime are not in 0/15/30/45. ";
+                messageList.add("Minute of startTime/endTime are not in 0/15/30/45.");
             }
-            
         } catch (ParseException ex) {
             isValid = false;
-            dateMessage += "startTime/endTime can not be parsed correctly. ";
+            messageList.add("startTime/endTime can not be parsed correctly.");
         }
 
-
+        //Validate AgendaItemName/AgendaItemTypeId
         if (StringHelper.isNullOrEmpty(item.getName()) && item.getTypeId() == 0)
         {
             isValid = false;
-            nameTypeMessage += "Name and Type cannot both be empty. ";
+            messageList.add("Name and Type cannot both be empty.");
         }
         
+        //Validate DayNumber
         try {
             List<String> list = Arrays.asList(item.getDayNumber().split(","));
             for (String str : list) Integer.parseInt(str.trim());
         } catch(NumberFormatException ex) {
             isValid = false;
-            dayNumberMessage += "dayNumber input is in invalid format. ";
+            messageList.add("dayNumber input is in invalid format.");
+        }
+        
+        //Validate AgendaItemTypeId
+        try {
+            if(!item.isIsTypeIdValid())
+            {
+                isValid = false;
+                messageList.add("typeId is not valid.");
+            }
+        } catch(Exception ex)
+        {
+            isValid = false;
+            messageList.add(ex.getMessage());
+        }
+        
+        //Validate AgendaItemSetupId
+        try {
+            if(!item.isIsSetupIdValid())
+            {
+                isValid = false;
+                messageList.add("setupId is not valid.");
+            }
+        } catch(Exception ex)
+        {
+            isValid = false;
+            messageList.add(ex.getMessage());
         }
 
+        //generate custom constraintViolation(s)
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            if(!StringHelper.isNullOrEmpty(dateMessage)) 
-                context.buildConstraintViolationWithTemplate(dateMessage).addConstraintViolation();
-            if(!StringHelper.isNullOrEmpty(nameTypeMessage))
-                context.buildConstraintViolationWithTemplate(nameTypeMessage).addConstraintViolation();
-            if(!StringHelper.isNullOrEmpty(dayNumberMessage))
-                context.buildConstraintViolationWithTemplate(dayNumberMessage).addConstraintViolation();
+            
+            for (String messageStr : messageList)
+            {
+                context.buildConstraintViolationWithTemplate(messageStr).addConstraintViolation();
+            }
         }
 
         return isValid;

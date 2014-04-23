@@ -14,6 +14,7 @@ import com.cvent.filters.SwaggerInternalFilter;
 import com.cvent.rfp.AgendaItem;
 import com.cvent.rfp.Days;
 import com.cvent.rfp.Rfp;
+import com.cvent.rfp.dao.LuDAO;
 import com.cvent.rfp.dao.RfpDAO;
 import com.cvent.rfp.util.StringHelper;
 import com.cvent.util.ResponseUtils;
@@ -56,6 +57,7 @@ import org.eclipse.jetty.http.HttpStatus;
 public class RfpResource {
     
     private RfpDAO dao;
+    private final LuDAO luDAO = new LuDAO();
 
     private static final String OK = "Http operation is successful.";
     private static final String BAD_REQUEST = "Bad Request. Detail: ";
@@ -263,6 +265,8 @@ public class RfpResource {
             item.setName(agendaItemName);
             item.setSetupId(agendaItemTypeId);
             item.setSetupId(agendaItemSetupId);
+            item.setIsTypeIdValid(luDAO.validateLookUpValue("dbo.LU_AGENDA_ITEM_TYPE", "agenda_item_type_id", agendaItemTypeId));
+            item.setIsSetupIdValid(luDAO.validateLookUpValue("dbo.LU_AGENDA_ITEM_SETUP", "agenda_item_setup_id", agendaItemSetupId));
             item.setNote(agendaAddlNote);
             item.setStartTime(startTime);
             item.setEndTime(endTime);
@@ -403,11 +407,13 @@ public class RfpResource {
             boolean twentyFourHrHoldFlag = (twentyFourHrHoldBooleanFlag == null)? agendaItem.isIsTwentyFourHourHoldRequired() : twentyFourHrHoldBooleanFlag;
             boolean hostVenueFlag = (hostVenueBooleanFlag == null)? agendaItem.isIsLocatedAtPrimaryEventVenue() : hostVenueBooleanFlag;
             dayNumber = (dayNumber == null)? dayNumberStr : dayNumber;
-
+                        
             AgendaItem item = new AgendaItem();
             item.setName(agendaItemName);
             item.setTypeId(agendaItemTypeId);
             item.setSetupId(agendaItemSetupId);
+            item.setIsTypeIdValid(luDAO.validateLookUpValue("dbo.LU_AGENDA_ITEM_TYPE", "agenda_item_type_id", agendaItemTypeId));
+            item.setIsSetupIdValid(luDAO.validateLookUpValue("dbo.LU_AGENDA_ITEM_SETUP", "agenda_item_setup_id", agendaItemSetupId));
             item.setNote(agendaAddlNote);
             item.setStartTime(startTime);
             item.setEndTime(endTime);

@@ -1,2 +1,4 @@
-com\cvent\rfp\mapper\RfpMapper.class
+com\cvent\rfp\dao\LuDAO.class
 com\cvent\rfp\dao\RfpDAO.class
+com\cvent\rfp\mapper\RfpMapper.class
+com\cvent\rfp\mapper\LuMapper.class
