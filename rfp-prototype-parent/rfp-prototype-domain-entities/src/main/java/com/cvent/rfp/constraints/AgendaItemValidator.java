@@ -13,9 +13,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 /**
@@ -50,24 +48,24 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
                 if (startTime.compareTo(endTime) >= 0)
                 {
                     isValid = false;
-                    messageList.add("Error: startTime should be before endTime.");
+                    messageList.add("StartTime must be before EndTime");
                 }
             }
             else
             {
                 isValid = false;
-                messageList.add("Error: minute of startTime/endTime are not in 0/15/30/45.");
+                messageList.add("StartTime/EndTime must have minute in 0/15/30/45");
             }
         } catch (ParseException ex) {
             isValid = false;
-            messageList.add("Error: startTime/endTime can not be parsed correctly.");
+            messageList.add("StartTime/EndTime input(s) must be in valid format");
         }
 
         //Validate AgendaItemName/AgendaItemTypeId
         if (StringHelper.isNullOrEmpty(item.getName()) && item.getTypeId() == 0)
         {
             isValid = false;
-            messageList.add("Error: 'Name' and 'Type' cannot both be empty.");
+            messageList.add("AgendaItemName and AgendaItemType cannot both be empty");
         }
         
         //Validate DayNumber
@@ -76,7 +74,7 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
             for (String str : list) Integer.parseInt(str.trim());
         } catch(NumberFormatException ex) {
             isValid = false;
-            messageList.add("Error: dayNumber input is in invalid format.");
+            messageList.add("DayNumber input must be in valid format");
         }
         
         //Validate AgendaItemTypeId
@@ -84,7 +82,7 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
             if(!item.isIsTypeIdValid())
             {
                 isValid = false;
-                messageList.add("Error: typeId is not valid.");
+                messageList.add("agendaItemType must be in valid range");
             }
         } catch(Exception ex)
         {
@@ -97,7 +95,7 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
             if(!item.isIsSetupIdValid())
             {
                 isValid = false;
-                messageList.add("Error: setupId is not valid.");
+                messageList.add("AgendaItemSetUp must be in valid range");
             }
         } catch(Exception ex)
         {

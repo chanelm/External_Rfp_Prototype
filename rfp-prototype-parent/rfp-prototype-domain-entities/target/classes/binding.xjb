@@ -36,25 +36,6 @@
             </annox:annotate>		
         </jaxb:bindings>
 
-        <!-- Agenda Class -->
-<!--        <jaxb:bindings  node="xs:complexType[@name='Agenda']/xs:sequence/xs:element[@name='rfpStub']"> 
-            <annox:annotate target="field">
-                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
-            </annox:annotate>		
-        </jaxb:bindings>
-
-        <jaxb:bindings  node="xs:complexType[@name='Agenda']/xs:sequence/xs:element[@name='rfpName']"> 
-            <annox:annotate target="field">
-                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
-            </annox:annotate>		
-        </jaxb:bindings>
-
-        <jaxb:bindings  node="xs:complexType[@name='Agenda']/xs:sequence/xs:element[@name='agendaItems']"> 
-            <annox:annotate target="field">
-                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
-            </annox:annotate>		
-        </jaxb:bindings>-->
-
         <!-- AgendaItem Class -->
         <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='Id']"> 
             <annox:annotate target="field">
@@ -121,7 +102,7 @@
         </jaxb:bindings>
 <!--        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='RequiredRoomSizeUnits']"> 
             <annox:annotate target="field">
-                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty">RequiredRoomSizeUnits</annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>-->
         <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='ExpectedNumberOfPeople']"> 
@@ -145,7 +126,7 @@
                 <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
             </annox:annotate>		
         </jaxb:bindings>
-        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='dayNumber']"> 
+        <jaxb:bindings  node="xs:complexType[@name='AgendaItem']/xs:sequence/xs:element[@name='DayNumber']"> 
             <annox:annotate target="field">
                 <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonIgnore">true</annox:annotate>
             </annox:annotate>		
@@ -176,9 +157,9 @@
         </jaxb:bindings>
 
         <!-- HelloWorld Class-->
-        <jaxb:bindings  node="xs:complexType[@name='HelloWorld']/xs:sequence/xs:element[@name='hello']">
+        <jaxb:bindings  node="xs:complexType[@name='HelloWorld']/xs:sequence/xs:element[@name='Hello']">
             <annox:annotate target="field">
-                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty"></annox:annotate>
+                <annox:annotate  annox:class="com.fasterxml.jackson.annotation.JsonProperty">Hello</annox:annotate>
             </annox:annotate>	
         </jaxb:bindings>
     </jaxb:bindings>

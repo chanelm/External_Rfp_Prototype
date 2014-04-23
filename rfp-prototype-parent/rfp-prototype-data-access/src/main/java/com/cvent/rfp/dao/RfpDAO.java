@@ -77,16 +77,17 @@ public class RfpDAO {
     /**
      * Gets rfp agenda item info by rfp stub
      *
+     * @param rfpStub
      * @param agendaItemStub
      * @return
      * @throws Exception
      */
-    public AgendaItem getRfpAgendaByAgendaItemStub(String agendaItemStub) throws Exception
+    public AgendaItem getRfpAgendaByAgendaItemStub(String rfpStub, String agendaItemStub) throws Exception
     {
         try (SqlSession session = sessionFactory.openSession(true)) {
             
             RfpMapper mapper = session.getMapper(RfpMapper.class);
-            AgendaItem agendaItem = mapper.getRfpAgendaItemByStub(agendaItemStub);
+            AgendaItem agendaItem = mapper.getRfpAgendaItemByStub(rfpStub, agendaItemStub);
             
             if (agendaItem == null) {
                 return null;

@@ -31,7 +31,6 @@ import java.util.UUID;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -51,9 +50,8 @@ import org.eclipse.jetty.http.HttpStatus;
  * @author yxie
  */
 
-@Path(value = "CSN/Planner/RFPs")
-@Api(value = "CSN/Planner/RFPs", description = "Get Rfp object Info")
-@Consumes(MediaType.APPLICATION_JSON)
+@Path(value = "CSN/Planner/Rfp")
+@Api(value = "CSN/Planner/Rfp", description = "Get Rfp object Info")
 @Produces(MediaType.APPLICATION_JSON)
 public class RfpResource {
     
@@ -89,12 +87,12 @@ public class RfpResource {
      *
      * @param uriInfo
      * @param grantedAPIKey
-     * @param rfpStub
+     * @param RfpId
      * @return
      * @throws Exception
      */
     @GET
-    @Path("/{rfpStub}")
+    @Path("/{RfpId}")
     @ApiOperation(value = "Get Rpf Object", notes = "This method gets Rfp Object from database.", response = Rfp.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
@@ -105,11 +103,11 @@ public class RfpResource {
             @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
             @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
-            @PathParam("rfpStub") UUID  rfpStub
+            @PathParam("RfpId") UUID  RfpId
             ) throws Exception 
     {
          try {
-            Rfp rfp = dao.getRfp(rfpStub.toString());
+            Rfp rfp = dao.getRfp(RfpId.toString());
             if (rfp == null) {
                 return ResponseUtils.getErrorResponse(HttpStatus.NOT_FOUND_404, NOT_FOUND);
             }
@@ -123,13 +121,49 @@ public class RfpResource {
      *
      * @param uriInfo
      * @param grantedAPIKey
-     * @param rfpStub
+     * @param RfpId
      * @return
      * @throws Exception
      */
     @GET
-    @Path("/{rfpStub}/AgendaItems")
-    @ApiOperation(value = "Get Rpf AgendaItem Object", notes = "This method gets Rfp AgendaItem Object from database.", response = AgendaItem.class)
+    @Path("/{RfpId}/AgendaItems")
+    @ApiOperation(value = "Get Rpf's list of AgendaItem Object", notes = "This method gets Rfp's list of AgendaItem Object from database.", response = AgendaItem.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
+        @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
+        @ApiResponse(code = HttpStatus.INTERNAL_SERVER_ERROR_500, message = INTERNAL_SERVER_ERROR)
+    })
+    public Response getRfpAgendaItemList( 
+            @Context UriInfo uriInfo,
+            @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
+            @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
+            @ApiParam(value = "rfp stub", required = true)
+            @PathParam("RfpId") UUID  RfpId
+            ) throws Exception 
+    {
+         try {
+            List<AgendaItem> ai = dao.getRfpAgendaItemListByRfpStub(RfpId.toString());
+            if (ai == null) {
+                return ResponseUtils.getErrorResponse(HttpStatus.NOT_FOUND_404, NOT_FOUND);
+            }
+            return Response.ok(ai).build();
+        } catch (Exception ex) {
+            return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, INTERNAL_SERVER_ERROR + ex.getMessage());
+        }
+    }  
+    
+        /**
+     *
+     * @param uriInfo
+     * @param grantedAPIKey
+     * @param RfpId
+     * @param Id
+     * @return
+     * @throws Exception
+     */
+    @GET
+    @Path("/{RfpId}/AgendaItems/{Id}")
+    @ApiOperation(value = "Get specific AgendaItem Object by stub", notes = "This method gets specific Rfp AgendaItem Object from database by stub.", response = AgendaItem.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
         @ApiResponse(code = HttpStatus.NOT_FOUND_404, message = NOT_FOUND),
@@ -140,15 +174,17 @@ public class RfpResource {
             @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
             @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
-            @PathParam("rfpStub") UUID  rfpStub
+            @PathParam("RfpId") UUID  RfpId,
+            @ApiParam(value = "rfp agenda item stub", required = true)
+            @PathParam("Id") UUID  Id
             ) throws Exception 
     {
          try {
-            List<AgendaItem> ai = dao.getRfpAgendaItemListByRfpStub(rfpStub.toString());
-            if (ai == null) {
+            AgendaItem item = dao.getRfpAgendaByAgendaItemStub(RfpId.toString(), Id.toString());
+            if (item == null) {
                 return ResponseUtils.getErrorResponse(HttpStatus.NOT_FOUND_404, NOT_FOUND);
             }
-            return Response.ok(ai).build();
+            return Response.ok(item).build();
         } catch (Exception ex) {
             return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, INTERNAL_SERVER_ERROR + ex.getMessage());
         }
@@ -158,13 +194,13 @@ public class RfpResource {
      *
      * @param uriInfo
      * @param grantedAPIKey
-     * @param rfpStub
-     * @param agendaItemStub
+     * @param RfpId
+     * @param Id
      * @return
      * @throws Exception
      */
     @DELETE
-    @Path("/{rfpStub}/AgendaItems/{agendaItemStub}")
+    @Path("/{RfpId}/AgendaItems/{Id}")
     @ApiOperation(value = "Delete rfp agenda item by stub", notes = "This method delete rfp agenda item by agenda_item_stub", response = String.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.UNAUTHORIZED_401, message = UNAUTHORIZED),
@@ -176,14 +212,14 @@ public class RfpResource {
             @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
             @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
-            @PathParam("rfpStub") UUID rfpStub,
+            @PathParam("RfpId") UUID RfpId,
             @ApiParam(value = "rfp agenda item stub", required = true)
-            @PathParam("agendaItemStub") UUID agendaItemStub
+            @PathParam("Id") UUID Id
             ) throws Exception
     {
         try
         {
-            int deletedRowNum = dao.deleteAgendaByStub(rfpStub.toString(), agendaItemStub.toString());
+            int deletedRowNum = dao.deleteAgendaByStub(RfpId.toString(), Id.toString());
             if(deletedRowNum > 0)
             {
                 return ResponseUtils.getErrorResponse(HttpStatus.OK_200, OK);
@@ -200,7 +236,7 @@ public class RfpResource {
      *
      * @param uriInfo
      * @param grantedAPIKey
-     * @param rfpStub
+     * @param RfpId
      * @param agendaItemName
      * @param agendaItemTypeId
      * @param agendaItemSetupId
@@ -217,7 +253,7 @@ public class RfpResource {
      * @throws Exception
      */
     @POST
-    @Path("/{rfpStub}/AgendaItems")
+    @Path("/{RfpId}/AgendaItems")
     @ApiOperation(value = "Create new agenda item for this rfp", notes = "This method create rfp agenda item for this rfp", response = String.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.BAD_REQUEST_400, message = BAD_REQUEST),
@@ -231,37 +267,37 @@ public class RfpResource {
             @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
             @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
-            @PathParam("rfpStub") UUID rfpStub,
+            @PathParam("RfpId") UUID RfpId,
             @ApiParam(value = "agenda item name", required = false)
-            @QueryParam("agendaItemName") String agendaItemName,
+            @QueryParam("Name") String agendaItemName,
             @ApiParam(value = "agenda item type id", required = false)
-            @QueryParam("agendaItemType") @DefaultValue("0") int agendaItemTypeId,   //need validation from LU table
+            @QueryParam("Type") @DefaultValue("0") int agendaItemTypeId,
             @ApiParam(value = "agenda item setup id", required = false)
-            @QueryParam("AgendaItemSetUp") @DefaultValue("0") int agendaItemSetupId, //need validation from LU table
+            @QueryParam("Setup") @DefaultValue("0") int agendaItemSetupId,
             @ApiParam(value = "agenda note", required = false)
-            @QueryParam("agendaAddlNote") @DefaultValue("") String agendaAddlNote,
+            @QueryParam("Note") @DefaultValue("") String agendaAddlNote,
             @ApiParam(value = "start time", required = true)
-            @QueryParam("startTime") String startTime,
+            @QueryParam("StartTime") String startTime,
             @ApiParam(value = "end time", required = true)
-            @QueryParam("endTime") String endTime,
+            @QueryParam("EndTime") String endTime,
             @ApiParam(value = "room size", required = true)
-            @QueryParam("roomSize") int roomSize,
+            @QueryParam("RequiredRoomSize") int roomSize,
             @ApiParam(value = "attendee count", required = true)
-            @QueryParam("attendeeCount") int attendeeCount,
+            @QueryParam("ExpectedNumberOfPeople") int attendeeCount,
             @ApiParam(value = "info required flag", required = true)
-            @QueryParam("infoRequiredFlag") @DefaultValue("false") boolean infoRequiredFlag,
+            @QueryParam("IsRoomInfoRequired") @DefaultValue("false") boolean infoRequiredFlag,
             @ApiParam(value = "24 hr hold flag", required = true)
-            @QueryParam("24HrHoldFlag") @DefaultValue("false") boolean twentyFourHrHoldFlag,
+            @QueryParam("IsTwentyFourHourHoldRequired") @DefaultValue("false") boolean twentyFourHrHoldFlag,
             @ApiParam(value = "locate at host venue flag", required = true)
-            @QueryParam("hostVenueFlag") @DefaultValue("false") boolean hostVenueFlag,
+            @QueryParam("IsLocatedAtPrimaryEventVenue") @DefaultValue("false") boolean hostVenueFlag,
             @ApiParam(value = "list of day number", required = true)
             @QueryParam("DayNumber") String dayNumber
     ) throws Exception
     {
         try
         {   
-            Rfp rfp = dao.getRfp(rfpStub.toString());
-            List<AgendaItem> ai = dao.getRfpAgendaItemListByRfpStub(rfpStub.toString());
+            Rfp rfp = dao.getRfp(RfpId.toString());
+            List<AgendaItem> ai = dao.getRfpAgendaItemListByRfpStub(RfpId.toString());
             
             if(rfp == null)
             {
@@ -289,7 +325,7 @@ public class RfpResource {
 
             int createdRowNum = dao.createAgendaItem(
                     rfp.getAccountId(),
-                    rfpStub.toString(),
+                    RfpId.toString(),
                     agendaItemName,
                     agendaItemTypeId,
                     agendaItemSetupId,
@@ -325,8 +361,8 @@ public class RfpResource {
      *
      * @param uriInfo
      * @param grantedAPIKey
-     * @param rfpStub
-     * @param agendaItemStub
+     * @param RfpId
+     * @param Id
      * @param agendaItemName
      * @param agendaItemTypeId
      * @param agendaItemSetupId
@@ -343,7 +379,7 @@ public class RfpResource {
      * @throws Exception
      */
     @POST
-    @Path("/RFP/{rfpStub}/AgendaItem/{agendaItemStub}")
+    @Path("/RFP/{RfpId}/AgendaItem/{Id}")
     @ApiOperation(value = "Update agenda item name by agenda item stub", notes = "This method update rfp agenda item by agenda_item_stub", response = String.class)
     @ApiResponses(value = {
         @ApiResponse(code = HttpStatus.BAD_REQUEST_400, message = BAD_REQUEST),
@@ -357,39 +393,45 @@ public class RfpResource {
             @Authority(methods = { AuthenticatorMethod.BEARER, AuthenticatorMethod.API_KEY })
             @ApiParam(access = SwaggerInternalFilter.INTERNAL) GrantedAPIKey grantedAPIKey,
             @ApiParam(value = "rfp stub", required = true)
-            @PathParam("rfpStub") UUID rfpStub,
+            @PathParam("RfpId") UUID RfpId,
             @ApiParam(value = "rfp agenda item stub", required = true)
-            @PathParam("agendaItemStub") UUID agendaItemStub,
+            @PathParam("Id") UUID Id,
             @ApiParam(value = "agenda item name", required = false)
-            @QueryParam("agendaItemName")  String agendaItemName,
+            @QueryParam("Name")  String agendaItemName,
             @ApiParam(value = "agenda item type id", required = false)
-            @QueryParam("agendaItemType") int agendaItemTypeId,   //need validation from LU table
+            @QueryParam("Type") int agendaItemTypeId,
             @ApiParam(value = "agenda item setup id", required = false)
-            @QueryParam("AgendaItemSetUp") int agendaItemSetupId, //need validation from LU table
+            @QueryParam("Setup") int agendaItemSetupId,
             @ApiParam(value = "agenda note", required = false)
-            @QueryParam("agendaAddlNote")  String agendaAddlNote,
+            @QueryParam("Note")  String agendaAddlNote,
             @ApiParam(value = "start time", required = false)
-            @QueryParam("startTime") String startTime,
+            @QueryParam("StartTime") String startTime,
             @ApiParam(value = "end time", required = false)
-            @QueryParam("endTime") String endTime,
+            @QueryParam("EndTime") String endTime,
             @ApiParam(value = "room size", required = false)
-            @QueryParam("roomSize") int roomSize,
+            @QueryParam("RequiredRoomSize") int roomSize,
             @ApiParam(value = "attendee count", required = false)
-            @QueryParam("attendeeCount") int attendeeCount,
+            @QueryParam("ExpectedNumberOfPeople") int attendeeCount,
             @ApiParam(value = "info required flag", required = false)
-            @QueryParam("infoRequiredFlag") Boolean infoRequiredBooleanFlag,
+            @QueryParam("IsRoomInfoRequired") Boolean infoRequiredBooleanFlag,
             @ApiParam(value = "24 hr hold flag", required = false)
-            @QueryParam("24HrHoldFlag") Boolean twentyFourHrHoldBooleanFlag,
+            @QueryParam("IsTwentyFourHourHoldRequired") Boolean twentyFourHrHoldBooleanFlag,
             @ApiParam(value = "locate at host venue flag", required = false)
-            @QueryParam("hostVenueFlag") Boolean hostVenueBooleanFlag,
+            @QueryParam("IsLocatedAtPrimaryEventVenue") Boolean hostVenueBooleanFlag,
             @ApiParam(value = "list of day number", required = false)
             @QueryParam("DayNumber") String dayNumber
             ) throws Exception
     {
         try
         {   
-            Rfp rfp = dao.getRfp(rfpStub.toString());
-            AgendaItem agendaItem = dao.getRfpAgendaByAgendaItemStub(agendaItemStub.toString());
+            Rfp rfp = dao.getRfp(RfpId.toString());
+            
+            if(rfp == null)
+            {
+                return ResponseUtils.getErrorResponse(HttpStatus.BAD_REQUEST_400, BAD_REQUEST);
+            }
+            
+            AgendaItem agendaItem = dao.getRfpAgendaByAgendaItemStub(rfp.getRfpStub(), Id.toString());
             
             if(agendaItem == null)
             {
@@ -436,8 +478,8 @@ public class RfpResource {
 
             int updatedRowNum = dao.updateAgendaItemByStub(
                     rfp.getAccountId(),
-                    rfpStub.toString(),
-                    agendaItem.getId(),
+                    RfpId.toString(),
+                    Id.toString(),
                     agendaItemName,
                     agendaItemTypeId,
                     agendaItemSetupId,
@@ -465,4 +507,5 @@ public class RfpResource {
             return ResponseUtils.getErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR_500, INTERNAL_SERVER_ERROR + ex.getMessage());
         }
     }
+
 }

@@ -76,7 +76,7 @@ public interface RfpMapper {
             + "rai.twentyfour_hour_hold_flag, "
             + "rai.located_at_host_venue_flag "
             + "FROM dbo.RFP_AGENDA_ITEM rai "
-            + "WHERE rai.rfp_agenda_item_stub = #{agendaItemStub}";    
+            + "WHERE rai.rfp_stub = #{rfpStub} AND rai.rfp_agenda_item_stub = #{agendaItemStub}";    
     
     String GET_AGENDA_ITEM_DETAIL_BY_STUB
             = "SELECT "
@@ -219,6 +219,7 @@ public interface RfpMapper {
     /**
      * Get rfp agenda item info by rfp stub from sql server
      *
+     * @param rfpStub
      * @param agendaItemStub
      * @return
      * @throws java.lang.Exception
@@ -244,11 +245,12 @@ public interface RfpMapper {
         @Result(property = "days", column = "{accountId = rfp_acct_id, rfpStub = rfp_stub, agendaItemStub = rfp_agenda_item_stub}", javaType = List.class, many = @Many(select = "getAgendaItemDaysByStub"))
     })
     public AgendaItem getRfpAgendaItemByStub(
+            @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub
     ) throws Exception;
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="getRfpAgendaItemByStub">
+    //<editor-fold defaultstate="collapsed" desc="getAgendaItemDaysByStub">
     /**
      * Get sleep room block info by rfp stub from sql server
      *
