@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fx="http://www.example.org/test" targetNamespace="http://www.example.org/test" >                                                                                                  
+    <complexType name="Rfp">                                                                         
+      <sequence>                                                                         
+        <element name="accountId" type="long" minOccurs="1" />
+        <element name="rfpStub" type="string" minOccurs="1" /> 
+        <element name="rfpName" type="string" minOccurs="1" /> 
+      </sequence>                                                                        
+    </complexType>
+
+    <complexType name="AgendaItem">
+        <sequence>
+            <element name = "Id" type = "string" />
+            <element name = "Name" type = "string" />
+            <element name = "Number" type = "int" minOccurs="0"/>
+            <element name = "TypeId" type = "int" minOccurs="0"/>
+            <element name = "Type" type = "string" />
+            <element name = "SetupId" type = "int" minOccurs="0"/>
+            <element name = "Setup" type = "string" />
+            <element name = "Note" type = "string" />
+            <element name = "StartTime" type = "string" />
+            <element name = "EndTime" type = "string" />
+            <element name = "RequiredRoomSize" type = "int" minOccurs="0"/>
+<!--            <element name = "RequiredRoomSizeUnits" type = "string" />-->
+            <element name = "ExpectedNumberOfPeople" type = "int" minOccurs="0"/>
+            <element name = "IsRoomInfoRequired" type = "boolean" minOccurs="0"/>
+            <element name = "IsTwentyFourHourHoldRequired" type = "boolean" minOccurs="0"/>
+            <element name = "IsLocatedAtPrimaryEventVenue" type = "boolean" minOccurs="0"/>
+            <element name = "DayNumber" type = "string" />
+            <element name = "IsTypeIdValid" type = "boolean" minOccurs="0"/>
+            <element name = "IsSetupIdValid" type = "boolean" minOccurs="0"/>
+            <element name = "Days" type = "fx:Days" minOccurs="0" maxOccurs = "unbounded" />
+        </sequence>
+    </complexType>
+    
+    <complexType name="Days">
+        <sequence>
+            <element name = "DayNumber" type = "int" minOccurs="0"/>
+            <element name = "Date" type = "string" />   
+        </sequence>    
+    </complexType>
+    
+    <complexType name="HelloWorld">
+        <sequence>
+            <element name = "Hello" type = "string" minOccurs="1" />
+        </sequence>
+    </complexType>
+
+</schema>     

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.cvent.rfp.dao;
 
 import com.cvent.rfp.AgendaItem;
@@ -21,15 +20,16 @@ import org.apache.ibatis.session.SqlSessionFactory;
  * @author yxie
  */
 public class RfpDAO {
+
     private SqlSessionFactory sessionFactory;
-            
-    public RfpDAO() { }
-    
-    public RfpDAO(SqlSessionFactory sessionFactory)
-    {
+
+    public RfpDAO() {
+    }
+
+    public RfpDAO(SqlSessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-    
+
     /**
      * Gets rfp info by rfp stub
      *
@@ -37,8 +37,7 @@ public class RfpDAO {
      * @return
      * @throws Exception
      */
-    public Rfp getRfp(String rfpStub) throws Exception
-    {
+    public Rfp getRfp(String rfpStub) throws Exception {
         try (SqlSession session = sessionFactory.openSession(true)) {
             RfpMapper mapper = session.getMapper(RfpMapper.class);
             Rfp rfp = mapper.getRfpByStub(rfpStub);
@@ -58,13 +57,12 @@ public class RfpDAO {
      * @return
      * @throws Exception
      */
-    public List<AgendaItem> getRfpAgendaItemListByRfpStub(String rfpStub) throws Exception
-    {
+    public List<AgendaItem> getRfpAgendaItemListByRfpStub(String rfpStub) throws Exception {
         try (SqlSession session = sessionFactory.openSession(true)) {
-            
+
             RfpMapper mapper = session.getMapper(RfpMapper.class);
             List<AgendaItem> agendaList = mapper.getRfpAgendaItemListByStub(rfpStub);
-            
+
             if (agendaList == null || agendaList.isEmpty()) {
                 return null;
             }
@@ -73,21 +71,21 @@ public class RfpDAO {
             throw ex;
         }
     }
-    
+
     /**
      * Gets rfp agenda item info by rfp stub
      *
+     * @param rfpStub
      * @param agendaItemStub
      * @return
      * @throws Exception
      */
-    public AgendaItem getRfpAgendaByAgendaItemStub(String agendaItemStub) throws Exception
-    {
+    public AgendaItem getRfpAgendaByAgendaItemStub(String rfpStub, String agendaItemStub) throws Exception {
         try (SqlSession session = sessionFactory.openSession(true)) {
-            
+
             RfpMapper mapper = session.getMapper(RfpMapper.class);
-            AgendaItem agendaItem = mapper.getRfpAgendaItemByStub(agendaItemStub);
-            
+            AgendaItem agendaItem = mapper.getRfpAgendaItemByStub(rfpStub, agendaItemStub);
+
             if (agendaItem == null) {
                 return null;
             }
@@ -96,34 +94,31 @@ public class RfpDAO {
             throw ex;
         }
     }
-    
+
     /**
      * Deletes rfp agenda item info by rfp stub and agenda item stub
      *
      * @param rfpStub
      * @param agendaItemStub
-     * @return 
+     * @return
      * @throws Exception
      */
-    public int deleteAgendaByStub(String rfpStub, String agendaItemStub) throws Exception
-    {
+    public int deleteAgendaByStub(String rfpStub, String agendaItemStub) throws Exception {
         try (SqlSession session = sessionFactory.openSession(true)) {
-            
+
             RfpMapper mapper = session.getMapper(RfpMapper.class);
             int deletedRow = mapper.deleteAgendaItemByStub(rfpStub, agendaItemStub);
-            
-            if(deletedRow > 0)
-            {
+
+            if (deletedRow > 0) {
                 mapper.deleteAgendaItemDetailByStub(rfpStub, agendaItemStub);
             }
-            
+
             return deletedRow;
         } catch (Exception ex) {
             throw ex;
         }
-    }    
-    
-    
+    }
+
     /**
      * Create rfp agenda item info
      *
@@ -145,8 +140,10 @@ public class RfpDAO {
      * @return
      * @throws Exception
      */
-    public int createAgendaItem(long accountId, String rfpStub, String agendaItemName, int agendaItemTypeId, int agendaItemSetupId, String agendaAddlNote, String startTime, String endTime, int roomSize, int attendeeCount, boolean infoRequiredFlag, boolean twentyFourHrHoldFlag, boolean hostVenueFlag, String dayNumber, int agendaItemCount) throws Exception
-    {
+    public int createAgendaItem(long accountId, String rfpStub, String agendaItemName, int agendaItemTypeId,
+            int agendaItemSetupId, String agendaAddlNote, String startTime, String endTime,
+            int roomSize, int attendeeCount, boolean infoRequiredFlag, boolean twentyFourHrHoldFlag,
+            boolean hostVenueFlag, String dayNumber, int agendaItemCount) throws Exception {
         try (SqlSession session = sessionFactory.openSession(true)) {
 
             String agendaItemStub = UUID.randomUUID().toString();
@@ -164,22 +161,20 @@ public class RfpDAO {
                     roomSize,
                     attendeeCount,
                     infoRequiredFlag ? 1 : 0,
-                    twentyFourHrHoldFlag? 1 : 0,
-                    hostVenueFlag? 1 : 0,
+                    twentyFourHrHoldFlag ? 1 : 0,
+                    hostVenueFlag ? 1 : 0,
                     (agendaItemCount + 1));
-            
-            if(createdRow > 0)
-            {
+
+            if (createdRow > 0) {
                 List<String> dayList = Arrays.asList(dayNumber.split(","));
-            
-                for (String str : dayList)
-                {
+
+                for (String str : dayList) {
                     mapper.createAgendaItemDetail(
-                        accountId,
-                        rfpStub,
-                        agendaItemStub,
-                        Integer.parseInt(str.trim())
-                        );
+                            accountId,
+                            rfpStub,
+                            agendaItemStub,
+                            Integer.parseInt(str.trim())
+                    );
                 }
             }
             return createdRow;
@@ -187,7 +182,7 @@ public class RfpDAO {
             throw ex;
         }
     }
-    
+
     /**
      * Updates rfp agenda item info by rfp stub and agenda item stub
      *
@@ -206,51 +201,52 @@ public class RfpDAO {
      * @param twentyFourHrHoldFlag
      * @param dayNumber
      * @param hostVenueFlag
-     * @return 
+     * @return
      * @throws Exception
      */
-    public int updateAgendaItemByStub(long accountId, String rfpStub, String agendaItemStub, String agendaItemName, int agendaItemTypeId, int agendaItemSetupId, String agendaAddlNote, String startTimeString, String endTimeString, int roomSize, int attendeeCount, boolean infoRequiredFlag, boolean twentyFourHrHoldFlag, boolean hostVenueFlag, String dayNumber) throws Exception
-    {
+    public int updateAgendaItemByStub(long accountId, String rfpStub, String agendaItemStub, String agendaItemName,
+            int agendaItemTypeId, int agendaItemSetupId, String agendaAddlNote,
+            String startTimeString, String endTimeString, int roomSize, int attendeeCount,
+            boolean infoRequiredFlag, boolean twentyFourHrHoldFlag, boolean hostVenueFlag,
+            String dayNumber) throws Exception {
         try (SqlSession session = sessionFactory.openSession(true)) {
-            
+
             RfpMapper mapper = session.getMapper(RfpMapper.class);
             int updatedRow = mapper.updateAgendaItemByStub(
-                    accountId, 
-                    rfpStub, 
-                    agendaItemStub, 
-                    agendaItemName, 
-                    agendaItemTypeId, 
-                    agendaItemSetupId, 
-                    agendaAddlNote, 
-                    DateFormatHelper.parseDate(startTimeString), 
-                    DateFormatHelper.parseDate(endTimeString), 
-                    roomSize, 
-                    attendeeCount, 
-                    infoRequiredFlag? 1 :0, 
-                    twentyFourHrHoldFlag? 1 :0, 
-                    hostVenueFlag? 1 :0
+                    accountId,
+                    rfpStub,
+                    agendaItemStub,
+                    agendaItemName,
+                    agendaItemTypeId,
+                    agendaItemSetupId,
+                    agendaAddlNote,
+                    DateFormatHelper.parseDate(startTimeString),
+                    DateFormatHelper.parseDate(endTimeString),
+                    roomSize,
+                    attendeeCount,
+                    infoRequiredFlag ? 1 : 0,
+                    twentyFourHrHoldFlag ? 1 : 0,
+                    hostVenueFlag ? 1 : 0
             );
-            
-            if(updatedRow > 0)
-            {
+
+            if (updatedRow > 0) {
                 mapper.deleteAgendaItemDetailByStub(rfpStub, agendaItemStub);
-                
+
                 List<String> dayList = Arrays.asList(dayNumber.split(","));
-            
-                for (String str : dayList)
-                {
+
+                for (String str : dayList) {
                     mapper.createAgendaItemDetail(
-                        accountId,
-                        rfpStub,
-                        agendaItemStub,
-                        Integer.parseInt(str.trim())
+                            accountId,
+                            rfpStub,
+                            agendaItemStub,
+                            Integer.parseInt(str.trim())
                     );
                 }
             }
-            
+
             return updatedRow;
         } catch (Exception ex) {
             throw ex;
         }
-    }       
+    }
 }

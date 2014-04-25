@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.cvent.rfp.health;
 
 import com.yammer.metrics.core.HealthCheck;
@@ -13,9 +12,8 @@ import com.yammer.metrics.core.HealthCheck;
  * @author yxie
  */
 public class RfpHealthCheck extends HealthCheck {
-    
-    public RfpHealthCheck()
-    {
+
+    public RfpHealthCheck() {
         super("rfp-prototype");
     }
 
@@ -23,5 +21,5 @@ public class RfpHealthCheck extends HealthCheck {
     protected Result check() throws Exception {
         return Result.healthy();
     }
-    
+
 }

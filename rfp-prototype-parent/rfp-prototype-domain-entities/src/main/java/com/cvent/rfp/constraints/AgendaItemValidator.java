@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.cvent.rfp.constraints;
 
 import com.cvent.rfp.AgendaItem;
@@ -16,17 +15,19 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
 /**
  *
  * @author yxie
- */
-
-
-/**
- * Validates the max response length for a Choice based on ChoiceType.LONG_TEXT or ChoiceType.SHORT_TEXT .
+ * Validates parameters of AgendaItem object.
  */
 public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem, AgendaItem> {
 
+    public static final int MINUTE_0 = 0;
+    public static final int MINUTE_15 = 15;
+    public static final int MINUTE_30 = 30;
+    public static final int MINUTE_45 = 45;
+    
     @Override
     public void initialize(ValidAgendaItem constraintAnnotation) {
     }
@@ -34,61 +35,75 @@ public class AgendaItemValidator implements ConstraintValidator<ValidAgendaItem,
     @Override
     public boolean isValid(AgendaItem item, ConstraintValidatorContext context) {
 
-        List<Integer> minuteList = new ArrayList<>(Arrays.asList(0,15,30,45));
+        List<Integer> minuteList = new ArrayList<>(Arrays.asList(MINUTE_0, MINUTE_15, MINUTE_30, MINUTE_45));
         boolean isValid = true;
-        String dateMessage = null;
-        String nameTypeMessage = null;
-        String dayNumberMessage = null;
+        List<String> messageList = new ArrayList<>();
 
-        Date startTime;
-        Date endTime;
-        
-        try{
-            startTime = DateFormatHelper.parseDate(item.getStartTime());
-            endTime = DateFormatHelper.parseDate(item.getEndTime());
+        //Validate startTime/endTime
+        try {
+            Date startTime = DateFormatHelper.parseDate(item.getStartTime());
+            Date endTime = DateFormatHelper.parseDate(item.getEndTime());
 
-            if(minuteList.contains(startTime.getMinutes()) && minuteList.contains(endTime.getMinutes()))
-            {
-                if (startTime.compareTo(endTime) >= 0)
-                {
+            if (minuteList.contains(startTime.getMinutes()) && minuteList.contains(endTime.getMinutes())) {
+                if (startTime.compareTo(endTime) >= 0) {
                     isValid = false;
-                    dateMessage += "startTime should be before endTime. ";
+                    messageList.add("StartTime must be before EndTime");
                 }
-            }
-            else
-            {
+            } else {
                 isValid = false;
-                dateMessage += "Minute of startTime/endTime are not in 0/15/30/45. ";
+                messageList.add("StartTime/EndTime must have minute in 0/15/30/45");
             }
-            
         } catch (ParseException ex) {
             isValid = false;
-            dateMessage += "startTime/endTime can not be parsed correctly. ";
+            messageList.add("StartTime/EndTime input(s) must be in valid format");
         }
 
-
-        if (StringHelper.isNullOrEmpty(item.getName()) && item.getTypeId() == 0)
-        {
+        //Validate AgendaItemName/AgendaItemTypeId
+        if (StringHelper.isNullOrEmpty(item.getName()) && item.getTypeId() == 0) {
             isValid = false;
-            nameTypeMessage += "Name and Type cannot both be empty. ";
+            messageList.add("AgendaItemName and AgendaItemType cannot both be empty");
         }
-        
+
+        //Validate DayNumber
         try {
             List<String> list = Arrays.asList(item.getDayNumber().split(","));
-            for (String str : list) Integer.parseInt(str.trim());
-        } catch(NumberFormatException ex) {
+            for (String str : list) {
+                Integer.parseInt(str.trim());
+            }
+        } catch (NumberFormatException ex) {
             isValid = false;
-            dayNumberMessage += "dayNumber input is in invalid format. ";
+            messageList.add("DayNumber input must be in valid format");
         }
 
+        //Validate AgendaItemTypeId
+        try {
+            if (!item.isIsTypeIdValid()) {
+                isValid = false;
+                messageList.add("agendaItemType must be in valid range");
+            }
+        } catch (Exception ex) {
+            isValid = false;
+            messageList.add(ex.getMessage());
+        }
+
+        //Validate AgendaItemSetupId
+        try {
+            if (!item.isIsSetupIdValid()) {
+                isValid = false;
+                messageList.add("AgendaItemSetUp must be in valid range");
+            }
+        } catch (Exception ex) {
+            isValid = false;
+            messageList.add(ex.getMessage());
+        }
+
+        //generate custom constraintViolation(s)
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            if(!StringHelper.isNullOrEmpty(dateMessage)) 
-                context.buildConstraintViolationWithTemplate(dateMessage).addNode("agendaItem").addConstraintViolation();
-            if(!StringHelper.isNullOrEmpty(nameTypeMessage))
-                context.buildConstraintViolationWithTemplate(nameTypeMessage).addNode("agendaItem").addConstraintViolation();
-            if(!StringHelper.isNullOrEmpty(dayNumberMessage))
-                context.buildConstraintViolationWithTemplate(dayNumberMessage).addNode("agendaItem").addConstraintViolation();
+
+            for (String messageStr : messageList) {
+                context.buildConstraintViolationWithTemplate(messageStr).addConstraintViolation();
+            }
         }
 
         return isValid;

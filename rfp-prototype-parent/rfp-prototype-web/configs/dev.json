@@ -17,7 +17,7 @@
     "apiVersion": "1.0.5",
     "swaggerBasePath": "http://localhost:8082",
     "messages": {
-        "hello": "Prototype for project External RFP"
+        "Hello": "Prototype for project External RFP"
     },
     "databaseConfig": {
     "driverClass": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
@@ -48,6 +48,7 @@
             "gzipEnabledForRequests": true
         }
     },
+    "authRequired": false,
     "noOpAccessToken": {
         "appId": 0,
         "accessToken": "65f83885027158d8e7438f5b4bcaeba9",

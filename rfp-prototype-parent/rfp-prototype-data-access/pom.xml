@@ -13,7 +13,7 @@
     <name>rfp-prototype-data-access</name>
     
     <properties>
-        <checkstyle.skip>true</checkstyle.skip>
+<!--        <checkstyle.skip>true</checkstyle.skip>-->
     </properties>
     
     <dependencies>
