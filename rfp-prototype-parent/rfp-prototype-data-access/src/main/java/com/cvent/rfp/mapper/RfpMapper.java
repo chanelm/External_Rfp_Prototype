@@ -26,141 +26,65 @@ import org.apache.ibatis.mapping.StatementType;
  */
 public interface RfpMapper {
 
-    String GET_RFP_BY_RFP_STUB
-            = "SELECT "
-            + "r.acct_id, "
-            + "r.rfp_stub, "
-            + "r.rfp_name "
-            + "FROM [dbo].[RFP] r "
+    String GET_RFP_BY_RFP_STUB = "SELECT " + "r.acct_id, " + "r.rfp_stub, " + "r.rfp_name " + "FROM [dbo].[RFP] r "
             + "WHERE r.rfp_stub = #{rfpStub}";
-    
-    String GET_RFP_AGENDA_ITEM_LIST_BY_STUB
-            = "SELECT "
-            + "rai.rfp_acct_id, "
-            + "rai.rfp_stub, "
-            + "rai.rfp_agenda_item_stub, "
-            + "rai.agenda_item_name, "
-            + "rai.agenda_item_number, "
+
+    String GET_RFP_AGENDA_ITEM_LIST_BY_STUB = "SELECT " + "rai.rfp_acct_id, " + "rai.rfp_stub, "
+            + "rai.rfp_agenda_item_stub, " + "rai.agenda_item_name, " + "rai.agenda_item_number, "
             + "rai.agenda_item_type_id, "
-            + "ISNULL((SELECT agenda_item_type_name FROM dbo.LU_AGENDA_ITEM_TYPE WHERE agenda_item_type_id = rai.agenda_item_type_id), '') AS agenda_item_type_name, "
+            + "ISNULL((SELECT agenda_item_type_name FROM dbo.LU_AGENDA_ITEM_TYPE " 
+            + "WHERE agenda_item_type_id = rai.agenda_item_type_id), '') AS agenda_item_type_name, "
             + "rai.agenda_item_setup_id, "
-            + "ISNULL((SELECT agenda_item_setup_name FROM dbo.LU_AGENDA_ITEM_SETUP WHERE agenda_item_setup_id = rai.agenda_item_setup_id), '') AS agenda_item_setup_name, "
-            + "rai.agenda_addl_info, "
-            + "rai.start_time, "
-            + "rai.end_time, "
-            + "rai.room_size, "
-            + "rai.attendee_count, "
-            + "rai.room_info_required_flag, "
-            + "rai.twentyfour_hour_hold_flag, "
-            + "rai.located_at_host_venue_flag "
-            + "FROM dbo.RFP_AGENDA_ITEM rai "
-            + "WHERE rai.rfp_stub = #{rfpStub}";
-    
-    String GET_RFP_AGENDA_ITEM_BY_STUB
-            = "SELECT "
-            + "rai.rfp_acct_id, "
-            + "rai.rfp_stub, "
-            + "rai.rfp_agenda_item_stub, "
-            + "rai.agenda_item_name, "
-            + "rai.agenda_item_number, "
+            + "ISNULL((SELECT agenda_item_setup_name FROM dbo.LU_AGENDA_ITEM_SETUP " 
+            + "WHERE agenda_item_setup_id = rai.agenda_item_setup_id), '') AS agenda_item_setup_name, "
+            + "rai.agenda_addl_info, " + "rai.start_time, " + "rai.end_time, " + "rai.room_size, "
+            + "rai.attendee_count, " + "rai.room_info_required_flag, " + "rai.twentyfour_hour_hold_flag, "
+            + "rai.located_at_host_venue_flag " + "FROM dbo.RFP_AGENDA_ITEM rai " + "WHERE rai.rfp_stub = #{rfpStub}";
+
+    String GET_RFP_AGENDA_ITEM_BY_STUB = "SELECT " + "rai.rfp_acct_id, " + "rai.rfp_stub, "
+            + "rai.rfp_agenda_item_stub, " + "rai.agenda_item_name, " + "rai.agenda_item_number, "
             + "rai.agenda_item_type_id, "
-            + "ISNULL((SELECT agenda_item_type_name FROM dbo.LU_AGENDA_ITEM_TYPE WHERE agenda_item_type_id = rai.agenda_item_type_id), '') AS agenda_item_type_name, "
+            + "ISNULL((SELECT agenda_item_type_name FROM dbo.LU_AGENDA_ITEM_TYPE "
+            + "WHERE agenda_item_type_id = rai.agenda_item_type_id), '') AS agenda_item_type_name, "
             + "rai.agenda_item_setup_id, "
-            + "ISNULL((SELECT agenda_item_setup_name FROM dbo.LU_AGENDA_ITEM_SETUP WHERE agenda_item_setup_id = rai.agenda_item_setup_id), '') AS agenda_item_setup_name, "
-            + "rai.agenda_addl_info, "
-            + "rai.start_time, "
-            + "rai.end_time, "
-            + "rai.room_size, "
-            + "rai.attendee_count, "
-            + "rai.room_info_required_flag, "
-            + "rai.twentyfour_hour_hold_flag, "
-            + "rai.located_at_host_venue_flag "
-            + "FROM dbo.RFP_AGENDA_ITEM rai "
-            + "WHERE rai.rfp_stub = #{rfpStub} AND rai.rfp_agenda_item_stub = #{agendaItemStub}";    
-    
-    String GET_AGENDA_ITEM_DETAIL_BY_STUB
-            = "SELECT "
-            + "raid.day_number AS day_number, "
-            + "DATEADD(dd, day_number, actual_agenda_start_date) AS date "
-            + "FROM dbo.RFP r "
+            + "ISNULL((SELECT agenda_item_setup_name FROM dbo.LU_AGENDA_ITEM_SETUP "
+            + "WHERE agenda_item_setup_id = rai.agenda_item_setup_id), '') AS agenda_item_setup_name, "
+            + "rai.agenda_addl_info, " + "rai.start_time, " + "rai.end_time, " + "rai.room_size, "
+            + "rai.attendee_count, " + "rai.room_info_required_flag, " + "rai.twentyfour_hour_hold_flag, "
+            + "rai.located_at_host_venue_flag " + "FROM dbo.RFP_AGENDA_ITEM rai "
+            + "WHERE rai.rfp_stub = #{rfpStub} AND rai.rfp_agenda_item_stub = #{agendaItemStub}";
+
+    String GET_AGENDA_ITEM_DETAIL_BY_STUB = "SELECT " + "raid.day_number AS day_number, "
+            + "DATEADD(dd, day_number, actual_agenda_start_date) AS date " + "FROM dbo.RFP r "
             + "JOIN dbo.RFP_AGENDA_ITEM_DETAIL raid "
             + "ON r.acct_id = raid.rfp_acct_id AND r.rfp_stub = raid.rfp_stub "
             + "WHERE raid.rfp_stub = #{rfpStub} AND raid.rfp_agenda_item_stub = #{agendaItemStub}";
-    
-    String DELETE_AGENDA_ITEM_BY_STUB
-            = "DELETE "
-            + "FROM dbo.RFP_AGENDA_ITEM "
-            + "WHERE rfp_stub = #{rfpStub} AND rfp_agenda_item_stub = #{agendaItemStub}";
-    
-    String DELETE_AGENDA_ITEM_DETAIL_BY_STUB
-            = "DELETE "
-            + "FROM dbo.RFP_AGENDA_ITEM_DETAIL "
+
+    String DELETE_AGENDA_ITEM_BY_STUB = "DELETE " + "FROM dbo.RFP_AGENDA_ITEM "
             + "WHERE rfp_stub = #{rfpStub} AND rfp_agenda_item_stub = #{agendaItemStub}";
 
-    String INSERT_AGENDA_ITEM_BY_STUB
-            = "INSERT INTO "
-            + "dbo.RFP_AGENDA_ITEM "
-            + "VALUES "
-            + "( "
-            + "#{accountId}, "
-            + "#{rfpStub}, "
-            + "#{agendaItemStub}, "
-            + "#{startTime}, "
-            + "#{endTime}, "
-            + "#{agendaItemName}, "
-            + "#{agendaItemTypeId}, "
-            + "#{agendaItemSetupId}, "
-//            + "ISNULL((SELECT agenda_item_type_id FROM dbo.LU_AGENDA_ITEM_TYPE WHERE agenda_item_type_name = #{agendaItemType}), 0), "
-//            + "ISNULL((SELECT agenda_item_setup_id FROM dbo.LU_AGENDA_ITEM_SETUP WHERE agenda_item_setup_name = #{agendaItemSetup}), 0), "
-            + "#{agendaAddlNote}, "
-            + "#{roomSize}, "
-            + "#{attendeeCount}, "
-            + "#{twentyFourHrHoldFlag}, "
-            + "#{infoRequiredFlag}, "
-            + "#{hostVenueFlag}, "
-            + "'Cvent - Fred', "
-            + "GETDATE(), "
-            + "'Cvent - Fred', "
-            + "GETDATE(), "
-            + "NULL, "
-            + "NULL, "
-            + "NULL, "
-            + "#{agendaItemNumber} "
-            + ") ";
-    
-        String INSERT_AGENDA_ITEM_DETAIL_BY_STUB
-            = "INSERT INTO "
-            + "dbo.RFP_AGENDA_ITEM_DETAIL "
-            + "VALUES "
-            + "( "
-            + "#{accountId}, "
-            + "#{rfpStub}, "
-            + "#{agendaItemStub}, "
-            + "#{dayNumber}, "
-            + "'Cvent - Fred', "
-            + "GETDATE() "
-            + ") ";
-        
-            
-        String UPDATE_AGENDA_ITEM_BY_STUB
-            = "UPDATE dbo.RFP_AGENDA_ITEM "
-            + "SET agenda_item_name = #{agendaItemName}, "
-            + "agenda_item_type_id = #{agendaItemTypeId}, "
-            + "agenda_item_setup_id = #{agendaItemSetupId}, "
-//            + "agenda_item_type_id = ISNULL((SELECT agenda_item_type_id FROM dbo.LU_AGENDA_ITEM_TYPE WHERE agenda_item_type_name = #{agendaItemType}), 0), "
-//            + "agenda_item_setup_id = ISNULL((SELECT agenda_item_setup_id FROM dbo.LU_AGENDA_ITEM_SETUP WHERE agenda_item_setup_name = #{agendaItemSetup}), 0), "
-            + "agenda_addl_info = #{agendaAddlNote}, "
-            + "start_time = #{startTime}, "
-            + "end_time = #{endTime}, "
-            + "room_size = #{roomSize}, "
-            + "attendee_count = #{attendeeCount}, "
+    String DELETE_AGENDA_ITEM_DETAIL_BY_STUB = "DELETE " + "FROM dbo.RFP_AGENDA_ITEM_DETAIL "
+            + "WHERE rfp_stub = #{rfpStub} AND rfp_agenda_item_stub = #{agendaItemStub}";
+
+    String INSERT_AGENDA_ITEM_BY_STUB = "INSERT INTO " + "dbo.RFP_AGENDA_ITEM " + "VALUES " + "( " + "#{accountId}, "
+            + "#{rfpStub}, " + "#{agendaItemStub}, " + "#{startTime}, " + "#{endTime}, " + "#{agendaItemName}, "
+            + "#{agendaItemTypeId}, " + "#{agendaItemSetupId}, " + "#{agendaAddlNote}, " + "#{roomSize}, "
+            + "#{attendeeCount}, " + "#{twentyFourHrHoldFlag}, " + "#{infoRequiredFlag}, " + "#{hostVenueFlag}, "
+            + "'Cvent - Fred', " + "GETDATE(), " + "'Cvent - Fred', " + "GETDATE(), " + "NULL, " + "NULL, " + "NULL, "
+            + "#{agendaItemNumber} " + ") ";
+
+    String INSERT_AGENDA_ITEM_DETAIL_BY_STUB = "INSERT INTO " + "dbo.RFP_AGENDA_ITEM_DETAIL " + "VALUES " + "( "
+            + "#{accountId}, " + "#{rfpStub}, " + "#{agendaItemStub}, " + "#{dayNumber}, " + "'Cvent - Fred', "
+            + "GETDATE() " + ") ";
+
+    String UPDATE_AGENDA_ITEM_BY_STUB = "UPDATE dbo.RFP_AGENDA_ITEM " + "SET agenda_item_name = #{agendaItemName}, "
+            + "agenda_item_type_id = #{agendaItemTypeId}, " + "agenda_item_setup_id = #{agendaItemSetupId}, "
+            + "agenda_addl_info = #{agendaAddlNote}, " + "start_time = #{startTime}, " + "end_time = #{endTime}, "
+            + "room_size = #{roomSize}, " + "attendee_count = #{attendeeCount}, "
             + "twentyfour_hour_hold_flag = #{twentyFourHrHoldFlag}, "
-            + "room_info_required_flag = #{infoRequiredFlag}, "
-            + "located_at_host_venue_flag = #{hostVenueFlag}, "
-            + "last_modified_by = 'Cvent - Fred', "
-            + "last_modified_date = GETDATE() "
+            + "room_info_required_flag = #{infoRequiredFlag}, " + "located_at_host_venue_flag = #{hostVenueFlag}, "
+            + "last_modified_by = 'Cvent - Fred', " + "last_modified_date = GETDATE() "
             + "WHERE rfp_acct_id = #{accountId} AND rfp_stub = #{rfpStub} AND rfp_agenda_item_stub = #{agendaItemStub}";
-
 
     //<editor-fold defaultstate="collapsed" desc="getRfpByStub">
     /**
@@ -177,11 +101,11 @@ public interface RfpMapper {
         @Result(property = "rfpStub", column = "rfp_stub"),
         @Result(property = "rfpName", column = "rfp_name")
     })
-    public Rfp getRfpByStub(
+    Rfp getRfpByStub(
             @Param("rfpStub") String rfpStub
     ) throws Exception;
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="getRfpAgendaItemListByStub">
     /**
      * Get rfp agenda item info by rfp stub from sql server
@@ -208,13 +132,15 @@ public interface RfpMapper {
         @Result(property = "isRoomInfoRequired", column = "room_info_required_flag"),
         @Result(property = "isTwentyFourHourHoldRequired", column = "twentyfour_hour_hold_flag"),
         @Result(property = "isLocatedAtPrimaryEventVenue", column = "located_at_host_venue_flag"),
-        @Result(property = "days", column = "{accountId = rfp_acct_id, rfpStub = rfp_stub, agendaItemStub = rfp_agenda_item_stub}", javaType = List.class, many = @Many(select = "getAgendaItemDaysByStub"))
+        @Result(property = "days", column
+                = "{accountId = rfp_acct_id, rfpStub = rfp_stub, agendaItemStub = rfp_agenda_item_stub}", javaType
+                = List.class, many = @Many(select = "getAgendaItemDaysByStub"))
     })
-    public List<AgendaItem> getRfpAgendaItemListByStub(
+    List<AgendaItem> getRfpAgendaItemListByStub(
             @Param("rfpStub") String rfpStub
     ) throws Exception;
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="getRfpAgendaItemByStub">
     /**
      * Get rfp agenda item info by rfp stub from sql server
@@ -242,9 +168,11 @@ public interface RfpMapper {
         @Result(property = "isRoomInfoRequired", column = "room_info_required_flag"),
         @Result(property = "isTwentyFourHourHoldRequired", column = "twentyfour_hour_hold_flag"),
         @Result(property = "isLocatedAtPrimaryEventVenue", column = "located_at_host_venue_flag"),
-        @Result(property = "days", column = "{accountId = rfp_acct_id, rfpStub = rfp_stub, agendaItemStub = rfp_agenda_item_stub}", javaType = List.class, many = @Many(select = "getAgendaItemDaysByStub"))
+        @Result(property = "days", column
+                = "{accountId = rfp_acct_id, rfpStub = rfp_stub, agendaItemStub = rfp_agenda_item_stub}", javaType
+                = List.class, many = @Many(select = "getAgendaItemDaysByStub"))
     })
-    public AgendaItem getRfpAgendaItemByStub(
+    AgendaItem getRfpAgendaItemByStub(
             @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub
     ) throws Exception;
@@ -264,48 +192,48 @@ public interface RfpMapper {
     @Results(value = {
         @Result(property = "dayNumber", column = "day_number"),
         @Result(property = "date", column = "date")
-        //@Result(property = "date", column = "date", jdbcType = JdbcType.DATE, javaType = Date.class)
+    //@Result(property = "date", column = "date", jdbcType = JdbcType.DATE, javaType = Date.class)
     })
-    public List<Days> getAgendaItemDaysByStub(
+    List<Days> getAgendaItemDaysByStub(
             @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub
     ) throws Exception;
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="deleteAgendaItemByStub">
     /**
      * Delete agenda item by rfp stub and agenda item stub from sql server
      *
      * @param rfpStub
      * @param agendaItemStub
-     * @return 
+     * @return
      * @throws java.lang.Exception
      */
     @Delete(DELETE_AGENDA_ITEM_BY_STUB)
     @Options(statementType = StatementType.CALLABLE)
-    public int deleteAgendaItemByStub (
-            @Param("rfpStub") String rfpStub, 
+    int deleteAgendaItemByStub(
+            @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub
     ) throws Exception;
     //</editor-fold>   
-    
+
     //<editor-fold defaultstate="collapsed" desc="deleteAgendaItemDetailByStub">
     /**
      * Delete agenda item by rfp stub and agenda item stub from sql server
      *
      * @param rfpStub
      * @param agendaItemStub
-     * @return 
+     * @return
      * @throws java.lang.Exception
      */
     @Delete(DELETE_AGENDA_ITEM_DETAIL_BY_STUB)
     @Options(statementType = StatementType.CALLABLE)
-    public int deleteAgendaItemDetailByStub (
-            @Param("rfpStub") String rfpStub, 
+    int deleteAgendaItemDetailByStub(
+            @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub
     ) throws Exception;
     //</editor-fold>       
-    
+
     //<editor-fold defaultstate="collapsed" desc="createAgendaItem">
     /**
      * Create agenda item in database
@@ -325,16 +253,16 @@ public interface RfpMapper {
      * @param twentyFourHrHoldFlag
      * @param hostVenueFlag
      * @param agendaItemNumber
-     * @return 
+     * @return
      * @throws java.lang.Exception
      */
     @Insert(INSERT_AGENDA_ITEM_BY_STUB)
     @Options(statementType = StatementType.CALLABLE)
-    public int createAgendaItem (
+    int createAgendaItem(
             @Param("accountId") long accountId,
             @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub,
-            @Param("agendaItemName")  String agendaItemName,
+            @Param("agendaItemName") String agendaItemName,
             @Param("agendaItemTypeId") int agendaItemTypeId,
             @Param("agendaItemSetupId") int agendaItemSetupId,
             @Param("agendaAddlNote") String agendaAddlNote,
@@ -347,9 +275,8 @@ public interface RfpMapper {
             @Param("hostVenueFlag") int hostVenueFlag,
             @Param("agendaItemNumber") int agendaItemNumber
     ) throws Exception;
-    
     //</editor-fold>   
-    
+
     //<editor-fold defaultstate="collapsed" desc="createAgendaItemDetail">
     /**
      * Create agenda item detail in database
@@ -357,21 +284,20 @@ public interface RfpMapper {
      * @param accountId
      * @param rfpStub
      * @param agendaItemStub
-     * @param DayNumber
-     * @return 
+     * @param dayNumber
+     * @return
      * @throws java.lang.Exception
      */
     @Insert(INSERT_AGENDA_ITEM_DETAIL_BY_STUB)
     @Options(statementType = StatementType.CALLABLE)
-    public int createAgendaItemDetail (
-            @Param("accountId") long accountId, 
-            @Param("rfpStub") String rfpStub, 
+    int createAgendaItemDetail(
+            @Param("accountId") long accountId,
+            @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub,
-            @Param("dayNumber") int DayNumber
+            @Param("dayNumber") int dayNumber
     ) throws Exception;
-    
     //</editor-fold>   
-    
+
     //<editor-fold defaultstate="collapsed" desc="updateAgendaItemByStub">
     /**
      * Update agenda item by rfp stub and agenda item stub from sql server
@@ -389,17 +315,17 @@ public interface RfpMapper {
      * @param attendeeCount
      * @param infoRequiredFlag
      * @param twentyFourHrHoldFlag
-     * @param hostVenueFlag 
-     * @return 
+     * @param hostVenueFlag
+     * @return
      * @throws java.lang.Exception
      */
     @Delete(UPDATE_AGENDA_ITEM_BY_STUB)
     @Options(statementType = StatementType.CALLABLE)
-    public int updateAgendaItemByStub (
-            @Param("accountId") long accountId, 
-            @Param("rfpStub") String rfpStub, 
+    int updateAgendaItemByStub(
+            @Param("accountId") long accountId,
+            @Param("rfpStub") String rfpStub,
             @Param("agendaItemStub") String agendaItemStub,
-            @Param("agendaItemName")  String agendaItemName,
+            @Param("agendaItemName") String agendaItemName,
             @Param("agendaItemTypeId") int agendaItemTypeId,
             @Param("agendaItemSetupId") int agendaItemSetupId,
             @Param("agendaAddlNote") String agendaAddlNote,
@@ -412,5 +338,5 @@ public interface RfpMapper {
             @Param("hostVenueFlag") int hostVenueFlag
     ) throws Exception;
     //</editor-fold>
-     
+
 }

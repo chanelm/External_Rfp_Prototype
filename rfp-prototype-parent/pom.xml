@@ -26,11 +26,22 @@
     
     <properties>
         <dropwizard.version>0.6.2.17</dropwizard.version>
-        <checkstyle.skip>true</checkstyle.skip>        
+<!--        <checkstyle.skip>true</checkstyle.skip>        -->
     </properties>
     
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.cvent.auth-service</groupId>
+                <artifactId>auth-service-core</artifactId>
+                <version>1.18-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <artifactId>dropwizard-auth</artifactId>
+                <groupId>com.yammer.dropwizard</groupId>
+                <type>jar</type>
+                <version>${dropwizard.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.cvent.rfp-prototype</groupId>
                 <artifactId>rfp-prototype-domain-entities</artifactId>

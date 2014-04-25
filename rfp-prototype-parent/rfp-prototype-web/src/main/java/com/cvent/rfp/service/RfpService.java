@@ -1,11 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.cvent.rfp.service;
-
 
 import com.cvent.auth.AuthenticatorMethod;
 import com.cvent.auth.FakeBearerAuthorizationFilter;
@@ -43,7 +36,6 @@ import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.ManagedDataSource;
 import com.yammer.dropwizard.db.ManagedDataSourceFactory;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -53,7 +45,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
  * @author yxie
  */
 public class RfpService extends Service<RfpServiceConfiguration> {
-    
+
     /**
      * A constant representing the environment dev.json configuration
      */
@@ -68,22 +60,20 @@ public class RfpService extends Service<RfpServiceConfiguration> {
     public void run(RfpServiceConfiguration t, Environment e) throws Exception {
         e.addResource(new HelloWorldResource(t.getMessages()));
         e.addHealthCheck(new RfpHealthCheck());
-        e.addFilter(new CORSFilter(), "/*");        
-        
-        
+        e.addFilter(new CORSFilter(), "/*");
+
         initializeMyBatis(t, e);
         initializeAuthentication(t, e);
         initializeSwagger(t, e);
 
     }
-    
+
 //    public void setMapperDateFormat(Environment e)
 //    {
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.s");
 //        e.getObjectMapperFactory().setDateFormat(dateFormat);
 //    }
-    
-/**
+    /**
      * Initialize authentication for this service
      *
      * @param authClientConfiguration
@@ -111,11 +101,10 @@ public class RfpService extends Service<RfpServiceConfiguration> {
 
         environment.addProvider(new MultiPlexingAuthProvider<>(authenticators, "api.cvent.com"));
     }
-    
-    public void initializeMyBatis(RfpServiceConfiguration t, Environment e) throws Exception
-    {
+
+    public void initializeMyBatis(RfpServiceConfiguration t, Environment e) throws Exception {
         //setup myBatis
-        
+
         final ManagedDataSourceFactory dataSourceFactory = new ManagedDataSourceFactory();
         final ManagedDataSource ds = dataSourceFactory.build(t.getDatabaseConfiguration());
 
@@ -123,17 +112,14 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         SqlSessionFactory sessionFactory = factory.build(e, t.getDatabaseConfiguration(), ds, "sqlserver");
         sessionFactory.getConfiguration().addMapper(RfpMapper.class);
         sessionFactory.getConfiguration().addMapper(LuMapper.class);
-        
+
         RfpDAO rfpDAO = new RfpDAO(sessionFactory);
         LuDAO luDAO = new LuDAO(sessionFactory);
         e.addResource(new RfpResource(rfpDAO, luDAO));
-        
-        
 
     }
-    
-    public void initializeSwagger(RfpServiceConfiguration t, Environment e)
-    {
+
+    public void initializeSwagger(RfpServiceConfiguration t, Environment e) {
         // Swagger Resource
         e.addResource(new ApiListingResourceJSON());
 
@@ -151,17 +137,16 @@ public class RfpService extends Service<RfpServiceConfiguration> {
         SwaggerConfig config = ConfigFactory.config();
         config.setApiVersion(t.getApiVersion());
         config.setBasePath(t.getSwaggerBasePath());
-        
+
         FilterFactory.filter_$eq(new SwaggerInternalFilter());
-        OverrideUUIDObjectForSwagger();
-        //OverrideAgendaItemObjectForSwagger();
+        overrideUUIDObjectForSwagger();
     }
 
     /**
      * Forces Swagger to render the model of the UUID class into a more user-friendly String format as opposed to the
      * default, which would represent the UUID class as an object containing leastSignificantBits & mostSignificantBits
      */
-    private void OverrideUUIDObjectForSwagger() {
+    private void overrideUUIDObjectForSwagger() {
         String jsonUUID = "{\"id\": \"UUID\", "
                 + "\"properties\": {"
                 + "   \"value\": {"
@@ -181,5 +166,5 @@ public class RfpService extends Service<RfpServiceConfiguration> {
     public static void main(String[] args) throws Exception {
         new RfpService().run(args);
     }
-    
+
 }

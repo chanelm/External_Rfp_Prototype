@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.cvent.rfp.constraints;
 
 import java.lang.annotation.Documented;
@@ -16,13 +15,14 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * Annotates the Choice class to validate max response length based on ChoiceType of open ended text response
+ * Annotate the AgendaItem class to validate business logic on parameters
  */
 @Documented
-@Constraint (validatedBy = AgendaItemValidator.class)
-@Target ({ TYPE, ANNOTATION_TYPE })
-@Retention (RUNTIME)
+@Constraint(validatedBy = AgendaItemValidator.class)
+@Target({ TYPE, ANNOTATION_TYPE })
+@Retention(RUNTIME)
 public @interface ValidAgendaItem {
+
     String message() default "";
 
     Class<?>[] groups() default { };

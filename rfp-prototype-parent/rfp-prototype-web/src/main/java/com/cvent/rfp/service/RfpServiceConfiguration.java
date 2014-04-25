@@ -10,66 +10,66 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ *
+ * @author yxie
+ */
 public class RfpServiceConfiguration extends Configuration {
 
     @Valid
     @JsonProperty
     private HelloWorld messages;
-    
+
     @Valid
     @JsonProperty
     private String apiVersion;
-    
+
     @Valid
     @JsonProperty
     private String swaggerBasePath;
-    
+
     @Valid
     @NotNull
     @JsonProperty
     private DatabaseConfiguration databaseConfig;
-    
+
     @JsonProperty
     @Valid
     private GrantedAccessToken noOpAccessToken;
-    
+
     @NotEmpty
     @JsonProperty
     private String environmentName;
-    
+
     @Valid
     @NotNull
     @JsonProperty
-    private ClientConfiguration authClient;  
-    
+    private ClientConfiguration authClient;
+
     @JsonProperty
     @NotNull
     @NotEmpty
     private String apiKey;
-    
+
     @JsonProperty
     private boolean authRequired = true;
-    
+
     public boolean getAuthRequired() {
         return authRequired;
     }
-    
-    
-    public DatabaseConfiguration getDatabaseConfiguration()
-    {
+
+    public DatabaseConfiguration getDatabaseConfiguration() {
         return databaseConfig;
     }
-    
-    public String getApiVersion()
-    {
+
+    public String getApiVersion() {
         return apiVersion;
     }
-    
-    public String getSwaggerBasePath()
-    {
+
+    public String getSwaggerBasePath() {
         return swaggerBasePath;
     }
-    
+
     public HelloWorld getMessages() {
         return messages;
     }
@@ -77,21 +77,20 @@ public class RfpServiceConfiguration extends Configuration {
     public void setMessages(HelloWorld messages) {
         this.messages = messages;
     }
-    
+
     public String getEnvironmentName() {
         return environmentName;
     }
-    
+
     public GrantedAccessToken getNoOpAccessToken() {
         return noOpAccessToken;
     }
-    
+
     public ClientConfiguration getAuthClientConfiguration() {
         return authClient;
-    }    
-    
-    public String getApiKey()
-    {
+    }
+
+    public String getApiKey() {
         return apiKey;
     }
 }

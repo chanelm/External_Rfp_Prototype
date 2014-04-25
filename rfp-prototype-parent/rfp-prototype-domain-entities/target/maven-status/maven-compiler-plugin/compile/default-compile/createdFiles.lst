@@ -9,7 +9,6 @@ com\cvent\rfp\serializers\JsonTimeSerializer.class
 com\cvent\rfp\constraints\ValidAgendaItem.class
 com\cvent\rfp\constraints\AgendaItemValidator.class
 com\cvent\rfp\HelloWorld.class
-com\cvent\rfp\serializers\NullSerializer.class
 com\cvent\rfp\serializers\JsonDateTimeDeSerializer.class
 com\cvent\rfp\serializers\JsonDateSerializer.class
 com\cvent\rfp\serializers\JsonDateDeSerializer.class

@@ -14,7 +14,7 @@
 
     <properties>
         <service.main>com.cvent.rfp.service.RfpService</service.main>
-        <checkstyle.skip>true</checkstyle.skip>
+<!--        <checkstyle.skip>true</checkstyle.skip>-->
     </properties>
 
     <dependencies>
@@ -42,7 +42,10 @@
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-bean-validation</artifactId>
         </dependency>            
-
+        <dependency>
+            <groupId>com.cvent.auth-service</groupId>
+            <artifactId>auth-service-core</artifactId>
+        </dependency>
 
         <!-- unit test libs -->
         <dependency>
@@ -64,12 +67,6 @@
         <dependency>
             <groupId>com.yammer.dropwizard</groupId>
             <artifactId>dropwizard-db</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.cvent.auth-service</groupId>
-            <artifactId>auth-service-core</artifactId>
-            <version>1.17</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 
